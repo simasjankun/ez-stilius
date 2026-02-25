@@ -7,7 +7,8 @@ export const CONTACT = {
   },
   address: 'Liepų g. 8, Veiviržėnų mstl., Klaipėdos r. sav.',
   social: {
-    facebook: 'https://facebook.com',
-    instagram: 'https://instagram.com',
+    facebook: '#',
+    instagram: '#',
+    tiktok: '#',
   },
 } as const;

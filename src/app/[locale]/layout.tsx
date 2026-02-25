@@ -2,7 +2,7 @@ import { use } from 'react';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Playfair_Display, DM_Sans } from 'next/font/google';
-import { Header } from '@/components/layout';
+import { Header, Footer } from '@/components/layout';
 import { CartProvider } from '@/context/CartContext';
 import '@/app/globals.css';
 
@@ -49,6 +49,7 @@ export default function LocaleLayout({
           <CartProvider>
             <Header />
             <main>{children}</main>
+            <Footer />
           </CartProvider>
         </NextIntlClientProvider>
       </body>

@@ -85,6 +85,13 @@
       "accessories": "Accessories"
     }
   },
+  "footer": {
+    "tagline": "Handmade products with love",
+    "navigation": "Navigation",
+    "categories": "Categories",
+    "contacts": "Contacts",
+    "copyright": "All rights reserved."
+  },
   "placeholder": {
     "content": "Page content coming soon"
   }

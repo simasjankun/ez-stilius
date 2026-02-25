@@ -85,6 +85,13 @@
       "accessories": "Aksesuarai"
     }
   },
+  "footer": {
+    "tagline": "Rankų darbo gaminiai su meile",
+    "navigation": "Navigacija",
+    "categories": "Kategorijos",
+    "contacts": "Kontaktai",
+    "copyright": "Visos teisės saugomos."
+  },
   "placeholder": {
     "content": "Puslapio turinys netrukus"
   }
