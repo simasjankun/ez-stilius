@@ -4,7 +4,15 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 
-const CATEGORIES = [
+interface CategoryCard {
+  slug: string;
+  image: string;
+  key: string;
+  large?: boolean;
+  wide?: boolean;
+}
+
+const CATEGORIES: CategoryCard[] = [
   {
     slug: 'clothing',
     image: '/images/categories/category-clothing.png',
@@ -27,7 +35,7 @@ const CATEGORIES = [
     key: 'interior-gifts',
     wide: true,
   },
-] as const;
+];
 
 export default function CategoriesSection() {
   const t = useTranslations('home.categories');
