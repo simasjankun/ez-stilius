@@ -45,11 +45,28 @@
       "label": "Discover",
       "title": "Our collections"
     },
+    "featured": {
+      "label": "Popular",
+      "title": "Favourite products",
+      "viewAll": "View all products"
+    },
     "hero": {
       "title": "Handmade products",
       "titleAccent": "with love",
       "subtitle": "I create unique knitted, crocheted, and sewn products, each with special attention to detail",
       "cta": "Browse the shop"
+    }
+  },
+  "products": {
+    "placeholder": {
+      "autumnScarf": "Autumn Scarf",
+      "laceTablecloth": "Lace Tablecloth",
+      "babyCardigan": "Baby Cardigan",
+      "crochetHooksSet": "Crochet Hooks Set",
+      "knittedDress": "Knitted Dress",
+      "linenNapkins": "Linen Napkins",
+      "bowTie": "Bow Tie",
+      "summerShawl": "Summer Shawl"
     }
   },
   "shop": {

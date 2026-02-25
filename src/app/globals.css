@@ -15,6 +15,14 @@
   --animate-heroFadeUp: heroFadeUp 800ms ease-out both;
 }
 
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes heroFadeUp {
   from {
     opacity: 0;

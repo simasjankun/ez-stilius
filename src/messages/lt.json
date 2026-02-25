@@ -45,11 +45,28 @@
       "label": "Atraskite",
       "title": "Mūsų kolekcijos"
     },
+    "featured": {
+      "label": "Populiaru",
+      "title": "Mėgstamiausi gaminiai",
+      "viewAll": "Žiūrėti visus gaminius"
+    },
     "hero": {
       "title": "Rankų darbo gaminiai",
       "titleAccent": "su meile",
       "subtitle": "Kuriu unikalius megztus, nertus ir siūtus gaminius, kiekvieną su ypatingu dėmesiu detalėms",
       "cta": "Naršyti parduotuvę"
+    }
+  },
+  "products": {
+    "placeholder": {
+      "autumnScarf": "Šalikėlis \u201eRudens\u201c",
+      "laceTablecloth": "Nėriniuota staltiesė",
+      "babyCardigan": "Kūdikio megztinis",
+      "crochetHooksSet": "Nėrimo vąšelių rinkinys",
+      "knittedDress": "Megzta suknelė",
+      "linenNapkins": "Lininės servetėlės",
+      "bowTie": "Peteliškė",
+      "summerShawl": "Vasarinis šalis"
     }
   },
   "shop": {
