@@ -61,6 +61,17 @@
   "breadcrumb": {
     "home": "Pagrindinis"
   },
+  "search": {
+    "placeholder": "Ieškoti produktų...",
+    "popularSearches": "Populiarios paieškos",
+    "comingSoon": "Paieška netrukus bus prieinama",
+    "tags": {
+      "scarves": "Šalikai",
+      "tablecloths": "Staltiesės",
+      "dresses": "Suknelės",
+      "accessories": "Aksesuarai"
+    }
+  },
   "placeholder": {
     "content": "Puslapio turinys netrukus"
   }

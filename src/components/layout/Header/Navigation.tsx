@@ -5,10 +5,12 @@ import { useTranslations } from 'next-intl';
 import { Search, ShoppingBag } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import MegaMenu from './MegaMenu';
+import SearchOverlay from './SearchOverlay';
 
 export default function Navigation() {
   const t = useTranslations('header');
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const navItems = [
@@ -73,6 +75,7 @@ export default function Navigation() {
 
       <div className="flex items-center gap-4">
         <button
+          onClick={() => setSearchOpen(true)}
           aria-label={t('search')}
           className="cursor-pointer text-charcoal hover:text-olive transition-colors p-1"
         >
@@ -89,6 +92,8 @@ export default function Navigation() {
           </span>
         </Link>
       </div>
+
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }

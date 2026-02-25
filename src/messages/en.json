@@ -61,6 +61,17 @@
   "breadcrumb": {
     "home": "Home"
   },
+  "search": {
+    "placeholder": "Search products...",
+    "popularSearches": "Popular searches",
+    "comingSoon": "Search coming soon",
+    "tags": {
+      "scarves": "Scarves",
+      "tablecloths": "Tablecloths",
+      "dresses": "Dresses",
+      "accessories": "Accessories"
+    }
+  },
   "placeholder": {
     "content": "Page content coming soon"
   }

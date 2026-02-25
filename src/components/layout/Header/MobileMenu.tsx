@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import {
   Menu,
   X,
+  Search,
   ShoppingBag,
   ChevronRight,
   ChevronLeft,
@@ -13,6 +14,7 @@ import {
   Mail,
 } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import SearchOverlay from './SearchOverlay';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { CONTACT } from '@/constants/contact';
 import type { Locale } from '@/types';
@@ -95,6 +97,7 @@ export default function MobileMenu() {
   const locale = useLocale() as Locale;
   const [isOpen, setIsOpen] = useState(false);
   const [showShop, setShowShop] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [animateItems, setAnimateItems] = useState(false);
 
@@ -283,6 +286,13 @@ export default function MobileMenu() {
       </Link>
 
       <div className="flex items-center gap-3">
+        <button
+          onClick={() => setSearchOpen(true)}
+          aria-label={t('search')}
+          className="cursor-pointer text-charcoal hover:text-olive transition-colors p-1"
+        >
+          <Search className="h-5 w-5" />
+        </button>
         <Link
           href="/cart"
           className="relative cursor-pointer text-charcoal hover:text-olive transition-colors p-1"
@@ -303,6 +313,7 @@ export default function MobileMenu() {
       </div>
 
       {mounted && createPortal(overlay, document.body)}
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }
