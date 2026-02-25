@@ -1,16 +1,15 @@
 import { useTranslations } from 'next-intl';
+import HomeHero from '@/components/sections/HomeHero';
 
 export default function HomePage() {
-  const t = useTranslations('home');
+  const t = useTranslations('placeholder');
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-[80vh] px-4">
-      <h1 className="font-serif text-5xl md:text-7xl text-charcoal tracking-wide">
-        {t('title')}
-      </h1>
-      <p className="mt-4 text-lg text-warm-gray">
-        {t('subtitle')}
-      </p>
-    </section>
+    <>
+      <HomeHero />
+      <section className="min-h-[50vh] flex items-center justify-center px-4">
+        <p className="text-warm-gray text-lg">{t('content')}</p>
+      </section>
+    </>
   );
 }

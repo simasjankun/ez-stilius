@@ -13,6 +13,7 @@
   "categories": {
     "clothing": {
       "label": "Drabužiai",
+      "name": "Drabužiai",
       "description": "Rankų darbo megzti ir nerti drabužiai"
     },
     "sewing-supplies": {
@@ -21,15 +22,46 @@
     },
     "accessories": {
       "label": "Aksesuarai",
+      "name": "Aksesuarai",
       "description": "Unikalūs rankų darbo aksesuarai"
     },
     "interior-gifts": {
       "label": "Interjero detalės / Dovanų idėjos",
       "description": "Jaukumo detalės namams ir dovanos artimiesiems"
+    },
+    "sewingSupplies": {
+      "name": "Priedai siuvimui",
+      "description": "Kokybiški siuvimo reikmenys ir priedai"
+    },
+    "interiorGifts": {
+      "name": "Interjero detalės / Dovanų idėjos",
+      "description": "Jaukumo detalės namams ir dovanos artimiesiems"
     }
   },
   "home": {
     "title": "EŽ Stilius",
-    "subtitle": "Rankų darbo gaminiai su meile"
+    "subtitle": "Rankų darbo gaminiai su meile",
+    "hero": {
+      "title": "Rankų darbo gaminiai",
+      "titleAccent": "su meile",
+      "subtitle": "Kuriu unikalius megztus, nertus ir siūtus gaminius, kiekvieną su ypatingu dėmesiu detalėms",
+      "cta": "Naršyti parduotuvę"
+    }
+  },
+  "shop": {
+    "title": "Parduotuvė",
+    "subtitle": "Visi rankų darbo gaminiai"
+  },
+  "about": {
+    "title": "Apie mane"
+  },
+  "contacts": {
+    "title": "Kontaktai"
+  },
+  "breadcrumb": {
+    "home": "Pagrindinis"
+  },
+  "placeholder": {
+    "content": "Puslapio turinys netrukus"
   }
 }

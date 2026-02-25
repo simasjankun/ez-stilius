@@ -13,6 +13,7 @@
   "categories": {
     "clothing": {
       "label": "Clothing",
+      "name": "Clothing",
       "description": "Handmade knitted and crocheted clothing"
     },
     "sewing-supplies": {
@@ -21,15 +22,46 @@
     },
     "accessories": {
       "label": "Accessories",
+      "name": "Accessories",
       "description": "Unique handmade accessories"
     },
     "interior-gifts": {
       "label": "Interior details / Gift ideas",
       "description": "Cozy home details and gifts for loved ones"
+    },
+    "sewingSupplies": {
+      "name": "Sewing supplies",
+      "description": "Quality sewing materials and supplies"
+    },
+    "interiorGifts": {
+      "name": "Interior details / Gift ideas",
+      "description": "Cozy home details and gifts for loved ones"
     }
   },
   "home": {
     "title": "EŽ Stilius",
-    "subtitle": "Handmade products with love"
+    "subtitle": "Handmade products with love",
+    "hero": {
+      "title": "Handmade products",
+      "titleAccent": "with love",
+      "subtitle": "I create unique knitted, crocheted, and sewn products, each with special attention to detail",
+      "cta": "Browse the shop"
+    }
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "All handmade products"
+  },
+  "about": {
+    "title": "About me"
+  },
+  "contacts": {
+    "title": "Contacts"
+  },
+  "breadcrumb": {
+    "home": "Home"
+  },
+  "placeholder": {
+    "content": "Page content coming soon"
   }
 }
