@@ -17,8 +17,8 @@
       "description": "Handmade knitted and crocheted clothing"
     },
     "sewing-supplies": {
-      "label": "Sewing supplies",
-      "description": "Quality sewing materials and supplies"
+      "label": "Craft supplies",
+      "description": "Quality craft materials and supplies"
     },
     "accessories": {
       "label": "Accessories",
@@ -30,8 +30,8 @@
       "description": "Cozy home details and gifts for loved ones"
     },
     "sewingSupplies": {
-      "name": "Sewing supplies",
-      "description": "Quality sewing materials and supplies"
+      "name": "Craft supplies",
+      "description": "Quality craft materials and supplies"
     },
     "interiorGifts": {
       "name": "Interior details / Gift ideas",

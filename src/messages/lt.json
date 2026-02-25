@@ -17,8 +17,8 @@
       "description": "Rankų darbo megzti ir nerti drabužiai"
     },
     "sewing-supplies": {
-      "label": "Priedai siuvimui",
-      "description": "Kokybiški siuvimo reikmenys ir priedai"
+      "label": "Priedai rankdarbiams",
+      "description": "Kokybiški rankdarbių reikmenys ir priedai"
     },
     "accessories": {
       "label": "Aksesuarai",
@@ -30,8 +30,8 @@
       "description": "Jaukumo detalės namams ir dovanos artimiesiems"
     },
     "sewingSupplies": {
-      "name": "Priedai siuvimui",
-      "description": "Kokybiški siuvimo reikmenys ir priedai"
+      "name": "Priedai rankdarbiams",
+      "description": "Kokybiški rankdarbių reikmenys ir priedai"
     },
     "interiorGifts": {
       "name": "Interjero detalės / Dovanų idėjos",
