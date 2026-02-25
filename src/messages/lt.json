@@ -50,6 +50,11 @@
       "title": "Mėgstamiausi gaminiai",
       "viewAll": "Žiūrėti visus gaminius"
     },
+    "about": {
+      "quote": "Kiekvienas gaminys – istorija, sukurta mylinčiomis rankomis",
+      "text": "Esu Eglė – mezgu nuo 18 metų ir kuriu unikalius rankų darbo gaminius savo studijoje Veiviržėnuose. Kiekvienas kūrinys gimsta iš natūralių medžiagų, su meile ir ypatingu dėmesiu detalėms.",
+      "cta": "Susipažinkite"
+    },
     "hero": {
       "title": "Rankų darbo gaminiai",
       "titleAccent": "su meile",
