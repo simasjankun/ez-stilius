@@ -4,11 +4,13 @@ import { useState, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Search, ShoppingBag } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { useCart } from '@/context/CartContext';
 import MegaMenu from './MegaMenu';
 import SearchOverlay from './SearchOverlay';
 
 export default function Navigation() {
   const t = useTranslations('header');
+  const { openCart, cartCount } = useCart();
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -81,16 +83,18 @@ export default function Navigation() {
         >
           <Search className="h-5 w-5" />
         </button>
-        <Link
-          href="/cart"
+        <button
+          onClick={openCart}
           className="relative cursor-pointer text-charcoal hover:text-olive transition-colors p-1"
           aria-label={t('cart')}
         >
           <ShoppingBag className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
-            0
-          </span>
-        </Link>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
+              {cartCount}
+            </span>
+          )}
+        </button>
       </div>
 
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />

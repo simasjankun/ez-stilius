@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import TopBar from './TopBar';
 import Navigation from './Navigation';
 import MobileMenu from './MobileMenu';
+import CartDrawer from './CartDrawer';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -38,6 +39,7 @@ export default function Header() {
           </div>
         </div>
       </header>
+      <CartDrawer />
     </>
   );
 }

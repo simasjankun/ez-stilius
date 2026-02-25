@@ -61,6 +61,19 @@
   "breadcrumb": {
     "home": "Pagrindinis"
   },
+  "cart": {
+    "title": "Krepšelis",
+    "empty": {
+      "title": "Jūsų krepšelis tuščias",
+      "subtitle": "Naršykite mūsų gaminius ir atraskite unikalius rankų darbo kūrinius",
+      "cta": "Naršyti parduotuvę"
+    },
+    "checkout": "Pereiti į apmokėjimą",
+    "continueShopping": "Tęsti apsipirkimą",
+    "total": "Suma",
+    "quantity": "Kiekis",
+    "remove": "Pašalinti"
+  },
   "search": {
     "placeholder": "Ieškoti produktų...",
     "popularSearches": "Populiarios paieškos",

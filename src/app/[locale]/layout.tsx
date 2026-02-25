@@ -3,6 +3,7 @@ import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Playfair_Display, DM_Sans } from 'next/font/google';
 import { Header } from '@/components/layout';
+import { CartProvider } from '@/context/CartContext';
 import '@/app/globals.css';
 
 const playfair = Playfair_Display({
@@ -45,8 +46,10 @@ export default function LocaleLayout({
     <html lang={locale} className={`${playfair.variable} ${dmSans.variable}`}>
       <body className="bg-cream text-charcoal font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
-          <Header />
-          <main>{children}</main>
+          <CartProvider>
+            <Header />
+            <main>{children}</main>
+          </CartProvider>
         </NextIntlClientProvider>
       </body>
     </html>

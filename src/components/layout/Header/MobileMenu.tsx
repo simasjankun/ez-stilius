@@ -16,6 +16,7 @@ import {
 import { Link } from '@/i18n/routing';
 import SearchOverlay from './SearchOverlay';
 import { useRouter, usePathname } from '@/i18n/routing';
+import { useCart } from '@/context/CartContext';
 import { CONTACT } from '@/constants/contact';
 import type { Locale } from '@/types';
 
@@ -91,10 +92,30 @@ function MobileFooter({ locale }: { locale: Locale }) {
   );
 }
 
+function CartButton({ onClick, label }: { onClick: () => void; label: string }) {
+  const { cartCount } = useCart();
+
+  return (
+    <button
+      onClick={onClick}
+      className="relative cursor-pointer text-charcoal p-1"
+      aria-label={label}
+    >
+      <ShoppingBag className="h-5 w-5" />
+      {cartCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
+          {cartCount}
+        </span>
+      )}
+    </button>
+  );
+}
+
 export default function MobileMenu() {
   const t = useTranslations('header');
   const tc = useTranslations('categories');
   const locale = useLocale() as Locale;
+  const { openCart } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -112,6 +133,11 @@ export default function MobileMenu() {
       setAnimateItems(false);
     }, 300);
   }, []);
+
+  function handleCartClick() {
+    close();
+    setTimeout(() => openCart(), 350);
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -148,17 +174,7 @@ export default function MobileMenu() {
               </span>
             </Link>
             <div className="flex items-center gap-3">
-              <Link
-                href="/cart"
-                onClick={close}
-                className="relative cursor-pointer text-charcoal p-1"
-                aria-label={t('cart')}
-              >
-                <ShoppingBag className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
-                  0
-                </span>
-              </Link>
+              <CartButton onClick={handleCartClick} label={t('cart')} />
               <button
                 onClick={close}
                 aria-label={t('closeMenu')}
@@ -230,17 +246,7 @@ export default function MobileMenu() {
               <span className="text-sm font-medium">{t('back')}</span>
             </button>
             <div className="flex items-center gap-3">
-              <Link
-                href="/cart"
-                onClick={close}
-                className="relative cursor-pointer text-charcoal p-1"
-                aria-label={t('cart')}
-              >
-                <ShoppingBag className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
-                  0
-                </span>
-              </Link>
+              <CartButton onClick={handleCartClick} label={t('cart')} />
               <button
                 onClick={close}
                 aria-label={t('closeMenu')}
@@ -293,16 +299,7 @@ export default function MobileMenu() {
         >
           <Search className="h-5 w-5" />
         </button>
-        <Link
-          href="/cart"
-          className="relative cursor-pointer text-charcoal hover:text-olive transition-colors p-1"
-          aria-label={t('cart')}
-        >
-          <ShoppingBag className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
-            0
-          </span>
-        </Link>
+        <CartButton onClick={openCart} label={t('cart')} />
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? t('closeMenu') : t('openMenu')}

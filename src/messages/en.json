@@ -61,6 +61,19 @@
   "breadcrumb": {
     "home": "Home"
   },
+  "cart": {
+    "title": "Cart",
+    "empty": {
+      "title": "Your cart is empty",
+      "subtitle": "Browse our products and discover unique handmade creations",
+      "cta": "Browse the shop"
+    },
+    "checkout": "Proceed to checkout",
+    "continueShopping": "Continue shopping",
+    "total": "Total",
+    "quantity": "Quantity",
+    "remove": "Remove"
+  },
   "search": {
     "placeholder": "Search products...",
     "popularSearches": "Popular searches",
