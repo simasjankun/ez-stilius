@@ -50,6 +50,24 @@
       "title": "Favourite products",
       "viewAll": "View all products"
     },
+    "usp": {
+      "handmade": {
+        "title": "Handmade",
+        "description": "Every product is unique and unrepeatable, created with love and attention to every detail"
+      },
+      "natural": {
+        "title": "Natural materials",
+        "description": "We work only with natural fiber yarns and high-quality fabrics"
+      },
+      "custom": {
+        "title": "Custom orders",
+        "description": "We'll create a product according to your vision and expectations"
+      },
+      "experience": {
+        "title": "Experience & quality",
+        "description": "Over 15 years of knitting experience and international competition winner"
+      }
+    },
     "about": {
       "quote": "Every product is a story, created by loving hands",
       "text": "I'm Egl\u0117 \u2014 I've been knitting since I was 18 and I create unique handmade products in my studio in Veivir\u017E\u0117nai. Every piece is made from natural materials, with love and special attention to detail.",

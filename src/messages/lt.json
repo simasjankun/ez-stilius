@@ -50,6 +50,24 @@
       "title": "Mėgstamiausi gaminiai",
       "viewAll": "Žiūrėti visus gaminius"
     },
+    "usp": {
+      "handmade": {
+        "title": "Rankų darbas",
+        "description": "Kiekvienas gaminys unikalus ir nepakartojamas, sukurtas su meile ir dėmesiu kiekvienai detalei"
+      },
+      "natural": {
+        "title": "Natūralios medžiagos",
+        "description": "Dirbame tik su natūralių pluoštų siūlais ir aukštos kokybės audiniais"
+      },
+      "custom": {
+        "title": "Individualūs užsakymai",
+        "description": "Sukursime gaminį pagal Jūsų viziją ir lūkesčius"
+      },
+      "experience": {
+        "title": "Patirtis ir kokybė",
+        "description": "Daugiau nei 15 metų patirtis mezgime ir tarptautinio konkurso nugalėtoja"
+      }
+    },
     "about": {
       "quote": "Kiekvienas gaminys – istorija, sukurta mylinčiomis rankomis",
       "text": "Esu Eglė – mezgu nuo 18 metų ir kuriu unikalius rankų darbo gaminius savo studijoje Veiviržėnuose. Kiekvienas kūrinys gimsta iš natūralių medžiagų, su meile ir ypatingu dėmesiu detalėms.",
