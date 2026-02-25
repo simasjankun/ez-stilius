@@ -1,0 +1,35 @@
+{
+  "header": {
+    "home": "Pagrindinis",
+    "shop": "Parduotuvė",
+    "about": "Apie mane",
+    "contacts": "Kontaktai",
+    "search": "Paieška",
+    "cart": "Krepšelis",
+    "openMenu": "Atidaryti meniu",
+    "closeMenu": "Uždaryti meniu",
+    "back": "Atgal"
+  },
+  "categories": {
+    "clothing": {
+      "label": "Drabužiai",
+      "description": "Rankų darbo megzti ir nerti drabužiai"
+    },
+    "sewing-supplies": {
+      "label": "Priedai siuvimui",
+      "description": "Kokybiški siuvimo reikmenys ir priedai"
+    },
+    "accessories": {
+      "label": "Aksesuarai",
+      "description": "Unikalūs rankų darbo aksesuarai"
+    },
+    "interior-gifts": {
+      "label": "Interjero detalės / Dovanų idėjos",
+      "description": "Jaukumo detalės namams ir dovanos artimiesiems"
+    }
+  },
+  "home": {
+    "title": "EŽ Stilius",
+    "subtitle": "Rankų darbo gaminiai su meile"
+  }
+}

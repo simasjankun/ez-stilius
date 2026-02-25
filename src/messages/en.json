@@ -1,0 +1,35 @@
+{
+  "header": {
+    "home": "Home",
+    "shop": "Shop",
+    "about": "About me",
+    "contacts": "Contacts",
+    "search": "Search",
+    "cart": "Cart",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "back": "Back"
+  },
+  "categories": {
+    "clothing": {
+      "label": "Clothing",
+      "description": "Handmade knitted and crocheted clothing"
+    },
+    "sewing-supplies": {
+      "label": "Sewing supplies",
+      "description": "Quality sewing materials and supplies"
+    },
+    "accessories": {
+      "label": "Accessories",
+      "description": "Unique handmade accessories"
+    },
+    "interior-gifts": {
+      "label": "Interior details / Gift ideas",
+      "description": "Cozy home details and gifts for loved ones"
+    }
+  },
+  "home": {
+    "title": "EŽ Stilius",
+    "subtitle": "Handmade products with love"
+  }
+}

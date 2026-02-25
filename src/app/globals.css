@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FAF8F5;
+  --color-olive: #8B8424;
+  --color-olive-dark: #6B6619;
+  --color-olive-light: #A89D2E;
+  --color-charcoal: #2D2A26;
+  --color-sand: #E8E0D4;
+  --color-warm-gray: #8A8478;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "DM Sans", sans-serif;
+}
