@@ -41,6 +41,10 @@
   "home": {
     "title": "EŽ Stilius",
     "subtitle": "Handmade products with love",
+    "categories": {
+      "label": "Discover",
+      "title": "Our collections"
+    },
     "hero": {
       "title": "Handmade products",
       "titleAccent": "with love",

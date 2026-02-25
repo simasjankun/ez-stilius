@@ -41,6 +41,10 @@
   "home": {
     "title": "EŽ Stilius",
     "subtitle": "Rankų darbo gaminiai su meile",
+    "categories": {
+      "label": "Atraskite",
+      "title": "Mūsų kolekcijos"
+    },
     "hero": {
       "title": "Rankų darbo gaminiai",
       "titleAccent": "su meile",
