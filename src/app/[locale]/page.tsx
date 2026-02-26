@@ -3,6 +3,7 @@ import CategoriesSection from '@/components/sections/CategoriesSection';
 import FeaturedProducts from '@/components/sections/FeaturedProducts';
 import AboutStrip from '@/components/sections/AboutStrip';
 import USPSection from '@/components/sections/USPSection';
+import GallerySection from '@/components/sections/GallerySection';
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <FeaturedProducts />
       <AboutStrip />
       <USPSection />
+      <GallerySection />
     </>
   );
 }

@@ -78,6 +78,12 @@
       "titleAccent": "with love",
       "subtitle": "I create unique knitted, crocheted, and sewn products, each with special attention to detail",
       "cta": "Browse the shop"
+    },
+    "gallery": {
+      "label": "Inspiration",
+      "title": "Our work",
+      "followUs": "Follow us on",
+      "instagram": "@ezstilius"
     }
   },
   "products": {
