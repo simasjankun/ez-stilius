@@ -11,4 +11,14 @@ export const CONTACT = {
     instagram: 'https://www.instagram.com/ezstilius/',
     tiktok: '#',
   },
+  workingHours: {
+    weekdays: '9:00 – 18:00',
+    saturday: '10:00 – 15:00',
+    sunday: null,
+  },
+  company: {
+    name: 'EŽ Stilius, MB',
+    companyCode: '305008819',
+    vatCode: 'LT100012164415',
+  },
 } as const;

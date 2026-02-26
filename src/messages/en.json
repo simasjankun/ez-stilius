@@ -242,7 +242,46 @@
     }
   },
   "contacts": {
-    "title": "Contacts"
+    "title": "Contacts",
+    "getInTouch": "Get in touch",
+    "workingHours": {
+      "title": "Working hours",
+      "weekdays": "Monday – Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "closed": "Closed"
+    },
+    "company": {
+      "title": "Company details",
+      "companyCode": "Company code",
+      "vatCode": "VAT code"
+    },
+    "social": "Social media",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "subjectPlaceholder": "Select a subject...",
+      "message": "Message",
+      "send": "Send message",
+      "sending": "Sending...",
+      "subjects": {
+        "general": "General inquiry",
+        "custom": "Custom order",
+        "other": "Other"
+      },
+      "required": "Required field",
+      "invalidEmail": "Invalid email address",
+      "success": {
+        "title": "Message sent!",
+        "subtitle": "Thank you for reaching out. I'll get back to you as soon as possible.",
+        "sendAnother": "Send another"
+      },
+      "error": "Failed to send. Please try again."
+    },
+    "map": {
+      "marker": "EŽ Stilius – Liepų g. 8, Veiviržėnai"
+    }
   },
   "breadcrumb": {
     "home": "Home"

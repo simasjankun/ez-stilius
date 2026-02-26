@@ -242,7 +242,46 @@
     }
   },
   "contacts": {
-    "title": "Kontaktai"
+    "title": "Kontaktai",
+    "getInTouch": "Susisiekite su manimi",
+    "workingHours": {
+      "title": "Darbo laikas",
+      "weekdays": "Pirmadienis – Penktadienis",
+      "saturday": "Šeštadienis",
+      "sunday": "Sekmadienis",
+      "closed": "Nedirbame"
+    },
+    "company": {
+      "title": "Rekvizitai",
+      "companyCode": "Įm. kodas",
+      "vatCode": "PVM mokėtojo kodas"
+    },
+    "social": "Socialiniai tinklai",
+    "form": {
+      "name": "Vardas",
+      "email": "El. paštas",
+      "subject": "Tema",
+      "subjectPlaceholder": "Pasirinkite temą...",
+      "message": "Žinutė",
+      "send": "Siųsti žinutę",
+      "sending": "Siunčiama...",
+      "subjects": {
+        "general": "Bendras klausimas",
+        "custom": "Individualus užsakymas",
+        "other": "Kita"
+      },
+      "required": "Privalomas laukas",
+      "invalidEmail": "Neteisingas el. pašto adresas",
+      "success": {
+        "title": "Žinutė išsiųsta!",
+        "subtitle": "Ačiū, kad susisiekėte. Atsakysiu kuo greičiau.",
+        "sendAnother": "Siųsti dar vieną"
+      },
+      "error": "Nepavyko išsiųsti. Bandykite dar kartą."
+    },
+    "map": {
+      "marker": "EŽ Stilius – Liepų g. 8, Veiviržėnai"
+    }
   },
   "breadcrumb": {
     "home": "Pagrindinis"
