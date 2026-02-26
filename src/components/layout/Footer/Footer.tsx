@@ -149,16 +149,18 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-sand/15 mt-12 pt-6">
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-[#A09A90]">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0 text-xs text-[#A09A90]">
             <span>&copy; {year} EŽ Stilius. {t('copyright')}</span>
-            <span>·</span>
-            <Link href="/privacy" className="hover:text-olive transition-colors">
-              {t('privacy')}
-            </Link>
-            <span>·</span>
-            <Link href="/terms" className="hover:text-olive transition-colors">
-              {t('terms')}
-            </Link>
+            <span className="hidden md:inline md:mx-3">·</span>
+            <div className="flex items-center gap-3">
+              <Link href="/privacy" className="hover:text-olive transition-colors">
+                {t('privacy')}
+              </Link>
+              <span>·</span>
+              <Link href="/terms" className="hover:text-olive transition-colors">
+                {t('terms')}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
