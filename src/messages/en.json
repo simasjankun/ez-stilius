@@ -316,7 +316,19 @@
     "navigation": "Navigation",
     "categories": "Categories",
     "contacts": "Contacts",
-    "copyright": "All rights reserved."
+    "copyright": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "comingSoon": "Information coming soon",
+    "comingSoonSubtitle": "This page will be updated soon."
+  },
+  "terms": {
+    "title": "Terms & Conditions",
+    "comingSoon": "Information coming soon",
+    "comingSoonSubtitle": "This page will be updated soon."
   },
   "placeholder": {
     "content": "Page content coming soon"

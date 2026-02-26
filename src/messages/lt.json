@@ -316,7 +316,19 @@
     "navigation": "Navigacija",
     "categories": "Kategorijos",
     "contacts": "Kontaktai",
-    "copyright": "Visos teisės saugomos."
+    "copyright": "Visos teisės saugomos.",
+    "privacy": "Privatumo politika",
+    "terms": "Taisyklės"
+  },
+  "privacy": {
+    "title": "Privatumo politika",
+    "comingSoon": "Informacija ruošiama",
+    "comingSoonSubtitle": "Šis puslapis bus papildytas netrukus."
+  },
+  "terms": {
+    "title": "Taisyklės ir sąlygos",
+    "comingSoon": "Informacija ruošiama",
+    "comingSoonSubtitle": "Šis puslapis bus papildytas netrukus."
   },
   "placeholder": {
     "content": "Puslapio turinys netrukus"
