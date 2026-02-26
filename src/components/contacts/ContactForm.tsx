@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { CheckCircle, Loader2, ChevronDown } from 'lucide-react';
+import { CONTACT } from '@/constants/contact';
 
 interface FormData {
   name: string;
@@ -17,13 +18,15 @@ interface FormErrors {
   message?: string;
 }
 
-type Status = 'idle' | 'loading' | 'success' | 'error';
+type Status = 'idle' | 'loading' | 'success' | 'error' | 'unconfigured';
 
 const inputClass =
   'w-full px-4 py-3 rounded-lg border bg-white text-base text-charcoal outline-none transition-colors focus:border-olive focus:ring-1 focus:ring-olive/20';
 
 export default function ContactForm() {
   const t = useTranslations('contacts.form');
+  const locale = useLocale();
+  const email = CONTACT.email[locale as 'lt' | 'en'] ?? CONTACT.email.lt;
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -78,7 +81,14 @@ export default function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      if (!res.ok) throw new Error();
+      if (res.status === 503) {
+        setStatus('unconfigured');
+        return;
+      }
+      if (!res.ok) {
+        setStatus('error');
+        return;
+      }
       setStatus('success');
     } catch {
       setStatus('error');
@@ -201,6 +211,21 @@ export default function ContactForm() {
         {status === 'loading' && <Loader2 className="w-4 h-4 animate-spin" />}
         {status === 'loading' ? t('sending') : t('send')}
       </button>
+
+      {/* Unconfigured — friendly alternative */}
+      {status === 'unconfigured' && (
+        <div className="p-4 bg-sand/40 rounded-lg text-sm text-charcoal space-y-3">
+          <p>{t('unconfigured')}</p>
+          <div className="flex flex-col gap-1.5">
+            <a href={CONTACT.phoneHref} className="text-olive hover:underline">
+              {CONTACT.phone}
+            </a>
+            <a href={`mailto:${email}`} className="text-olive hover:underline">
+              {email}
+            </a>
+          </div>
+        </div>
+      )}
 
       {status === 'error' && (
         <p className="text-red-500 text-sm text-center">{t('error')}</p>

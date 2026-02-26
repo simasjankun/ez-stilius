@@ -1,9 +1,16 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey || apiKey === 're_placeholder_key') {
+    return NextResponse.json(
+      { error: 'Email service not configured yet' },
+      { status: 503 }
+    );
+  }
+
   try {
     const { name, email, subject, message } = await request.json();
 
@@ -11,7 +18,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    await resend.emails.send({
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
       from: 'EŽ Stilius <noreply@ezstilius.lt>',
       to: ['info@ezstilius.lt'],
       replyTo: email,
@@ -25,6 +33,10 @@ export async function POST(request: Request) {
         <p>${message.replace(/\n/g, '<br>')}</p>
       `,
     });
+
+    if (error) {
+      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch {

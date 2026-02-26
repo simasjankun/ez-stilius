@@ -277,6 +277,7 @@
         "subtitle": "Thank you for reaching out. I'll get back to you as soon as possible.",
         "sendAnother": "Send another"
       },
+      "unconfigured": "The contact form will be activated soon. For now, please reach out via email or phone:",
       "error": "Failed to send. Please try again."
     },
     "map": {
