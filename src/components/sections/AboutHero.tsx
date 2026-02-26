@@ -2,24 +2,14 @@
 
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import Breadcrumb from '@/components/ui/Breadcrumb';
 import FadeIn from '@/components/ui/FadeIn';
 
 export default function AboutHero() {
   const t = useTranslations('about');
-  const tb = useTranslations('breadcrumb');
 
   return (
     <section className="bg-sand/20 py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <div className="mb-10 md:mb-14 text-center">
-          <Breadcrumb items={[
-            { label: tb('home'), href: '/' },
-            { label: t('title') },
-          ]} />
-        </div>
-
         {/* Two-column layout */}
         <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16">
           {/* Photo */}
