@@ -1,8 +1,9 @@
-import { use } from 'react';
+import { Suspense, use } from 'react';
 import { useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { getCategoryBySlug, categories } from '@/constants/categories';
 import PageHero from '@/components/sections/PageHero';
+import ProductGrid from '@/components/shop/ProductGrid';
 
 export function generateStaticParams() {
   return categories.map((c) => ({ category: c.slug }));
@@ -24,7 +25,6 @@ export default function CategoryPage({
 
   const name = t(`${category.translationKey}.name`);
   const description = t(`${category.translationKey}.description`);
-  const tp = useTranslations('placeholder');
 
   return (
     <>
@@ -37,9 +37,9 @@ export default function CategoryPage({
           { label: name },
         ]}
       />
-      <section className="min-h-[50vh] flex items-center justify-center px-4">
-        <p className="text-warm-gray text-lg">{tp('content')}</p>
-      </section>
+      <Suspense>
+        <ProductGrid lockedCategory={slug} />
+      </Suspense>
     </>
   );
 }

@@ -13,13 +13,14 @@ interface FilterOption {
 interface MobileFilterDrawerProps {
   open: boolean;
   onClose: () => void;
-  categories: string[];
+  categories?: string[];
   colors: string[];
-  categoryOptions: FilterOption[];
-  onCategoriesChange: (values: string[]) => void;
+  categoryOptions?: FilterOption[];
+  onCategoriesChange?: (values: string[]) => void;
   onColorsChange: (values: string[]) => void;
   onClear: () => void;
   resultCount: number;
+  showCategoryFilter?: boolean;
 }
 
 function CheckboxIcon({ checked }: { checked: boolean }) {
@@ -37,13 +38,14 @@ function CheckboxIcon({ checked }: { checked: boolean }) {
 export default function MobileFilterDrawer({
   open,
   onClose,
-  categories,
+  categories = [],
   colors,
-  categoryOptions,
-  onCategoriesChange,
+  categoryOptions = [],
+  onCategoriesChange = () => {},
   onColorsChange,
   onClear,
   resultCount,
+  showCategoryFilter = true,
 }: MobileFilterDrawerProps) {
   const t = useTranslations('shop.filters');
   const tc = useTranslations('shop.filters.colors');
@@ -102,24 +104,28 @@ export default function MobileFilterDrawer({
 
         {/* Scrollable content */}
         <div className="overflow-y-auto flex-1 px-6 pb-4">
-          {/* Categories */}
-          <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">
-            {t('categoriesLabel')}
-          </p>
-          {categoryOptions.map((option) => {
-            const checked = categories.includes(option.value);
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => toggleCategory(option.value)}
-                className="w-full flex items-center gap-3 py-3 text-sm text-charcoal"
-              >
-                <CheckboxIcon checked={checked} />
-                <span className={checked ? 'text-olive font-medium' : ''}>{option.label}</span>
-              </button>
-            );
-          })}
+          {/* Categories — hidden on category pages */}
+          {showCategoryFilter && categoryOptions.length > 0 && (
+            <>
+              <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">
+                {t('categoriesLabel')}
+              </p>
+              {categoryOptions.map((option) => {
+                const checked = categories.includes(option.value);
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => toggleCategory(option.value)}
+                    className="w-full flex items-center gap-3 py-3 text-sm text-charcoal"
+                  >
+                    <CheckboxIcon checked={checked} />
+                    <span className={checked ? 'text-olive font-medium' : ''}>{option.label}</span>
+                  </button>
+                );
+              })}
+            </>
+          )}
 
           {/* Colors */}
           <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">

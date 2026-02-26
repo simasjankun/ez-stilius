@@ -9,27 +9,29 @@ import ColorDropdown from '@/components/ui/ColorDropdown';
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer';
 
 interface FilterBarProps {
-  categories: string[];
+  categories?: string[];
   colors: string[];
   sort: string;
-  onCategoriesChange: (values: string[]) => void;
+  onCategoriesChange?: (values: string[]) => void;
   onColorsChange: (values: string[]) => void;
   onSortChange: (value: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
   resultCount: number;
+  showCategoryFilter?: boolean;
 }
 
 export default function FilterBar({
-  categories,
+  categories = [],
   colors,
   sort,
-  onCategoriesChange,
+  onCategoriesChange = () => {},
   onColorsChange,
   onSortChange,
   onClearFilters,
   hasActiveFilters,
   resultCount,
+  showCategoryFilter = true,
 }: FilterBarProps) {
   const t = useTranslations('shop.filters');
   const tc = useTranslations('categories');
@@ -62,7 +64,7 @@ export default function FilterBar({
     return `${colors.length} ${t('colorsSelected')}`;
   }
 
-  const activeFilterCount = categories.length + colors.length;
+  const activeFilterCount = (showCategoryFilter ? categories.length : 0) + colors.length;
 
   return (
     <>
@@ -71,15 +73,17 @@ export default function FilterBar({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="flex flex-wrap items-center gap-3 flex-1">
-              <MultiSelectDropdown
-                options={categoryOptions}
-                values={categories}
-                onChange={onCategoriesChange}
-                buttonLabel={getCategoryLabel()}
-                hasClear={categories.length > 0}
-                onClear={() => onCategoriesChange([])}
-                className="min-w-[180px]"
-              />
+              {showCategoryFilter && (
+                <MultiSelectDropdown
+                  options={categoryOptions}
+                  values={categories}
+                  onChange={onCategoriesChange}
+                  buttonLabel={getCategoryLabel()}
+                  hasClear={categories.length > 0}
+                  onClear={() => onCategoriesChange([])}
+                  className="min-w-[180px]"
+                />
+              )}
               <ColorDropdown
                 values={colors}
                 onChange={onColorsChange}
@@ -117,7 +121,6 @@ export default function FilterBar({
       <div className="md:hidden border-b border-sand">
         <div className="mx-auto max-w-7xl px-4 py-3">
           <div className="flex gap-3">
-            {/* Filters button */}
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
@@ -131,8 +134,6 @@ export default function FilterBar({
                 </span>
               )}
             </button>
-
-            {/* Sort dropdown */}
             <CustomDropdown
               options={sortOptions}
               value={sort}
@@ -141,8 +142,6 @@ export default function FilterBar({
               className="w-1/2"
             />
           </div>
-
-          {/* Results count */}
           <p className="text-xs text-warm-gray text-center mt-2">
             {t('found')}: <span className="text-charcoal font-medium">{resultCount}</span>
           </p>
@@ -163,6 +162,7 @@ export default function FilterBar({
           setDrawerOpen(false);
         }}
         resultCount={resultCount}
+        showCategoryFilter={showCategoryFilter}
       />
     </>
   );

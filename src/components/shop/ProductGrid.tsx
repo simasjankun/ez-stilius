@@ -17,28 +17,34 @@ function parseParam(param: string | null): string[] {
   return param.split(',').filter(Boolean);
 }
 
-export default function ProductGrid() {
+interface ProductGridProps {
+  /** When set, products are pre-filtered by this category and the category filter is hidden. */
+  lockedCategory?: string;
+}
+
+export default function ProductGrid({ lockedCategory }: ProductGridProps) {
   const t = useTranslations('shop');
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  const [categories, setCategories] = useState<string[]>(() => parseParam(searchParams.get('category')));
+  const [categories, setCategories] = useState<string[]>(() =>
+    lockedCategory ? [] : parseParam(searchParams.get('category'))
+  );
   const [colors, setColors] = useState<string[]>(() => parseParam(searchParams.get('color')));
   const [sort, setSort] = useState(searchParams.get('sort') ?? '');
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
-  // Sync state when URL params change (e.g. navigating from mega menu)
   useEffect(() => {
-    setCategories(parseParam(searchParams.get('category')));
+    if (!lockedCategory) setCategories(parseParam(searchParams.get('category')));
     setColors(parseParam(searchParams.get('color')));
     setSort(searchParams.get('sort') ?? '');
     setVisibleCount(INITIAL_VISIBLE);
-  }, [searchParams]);
+  }, [searchParams, lockedCategory]);
 
   function updateUrl(nextCategories: string[], nextColors: string[], nextSort: string) {
     const params = new URLSearchParams();
-    if (nextCategories.length > 0) params.set('category', nextCategories.join(','));
+    if (!lockedCategory && nextCategories.length > 0) params.set('category', nextCategories.join(','));
     if (nextColors.length > 0) params.set('color', nextColors.join(','));
     if (nextSort) params.set('sort', nextSort);
     const query = params.toString();
@@ -63,26 +69,27 @@ export default function ProductGrid() {
   }
 
   function handleClearFilters() {
-    setCategories([]);
+    if (!lockedCategory) setCategories([]);
     setColors([]);
     setSort('');
     setVisibleCount(INITIAL_VISIBLE);
-    router.push('/shop', { scroll: false });
+    router.push(pathname as '/shop', { scroll: false });
   }
 
-  const hasActiveFilters = categories.length > 0 || colors.length > 0 || !!sort;
+  const hasActiveFilters =
+    (!lockedCategory && categories.length > 0) || colors.length > 0 || !!sort;
 
   const filtered = useMemo(() => {
     let result = [...placeholderProducts];
 
-    if (categories.length > 0) {
+    if (lockedCategory) {
+      result = result.filter((p) => p.category === lockedCategory);
+    } else if (categories.length > 0) {
       result = result.filter((p) => categories.includes(p.category));
     }
 
     if (colors.length > 0) {
-      result = result.filter(
-        (p) => p.colors && p.colors.some((c) => colors.includes(c))
-      );
+      result = result.filter((p) => p.colors && p.colors.some((c) => colors.includes(c)));
     }
 
     if (sort === 'price-asc') {
@@ -94,7 +101,7 @@ export default function ProductGrid() {
     }
 
     return result;
-  }, [categories, colors, sort]);
+  }, [lockedCategory, categories, colors, sort]);
 
   const visible = filtered.slice(0, visibleCount);
   const remaining = Math.max(filtered.length - visibleCount, 0);
@@ -113,6 +120,7 @@ export default function ProductGrid() {
         onClearFilters={handleClearFilters}
         hasActiveFilters={hasActiveFilters}
         resultCount={filtered.length}
+        showCategoryFilter={!lockedCategory}
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 pb-16 md:pb-24">
