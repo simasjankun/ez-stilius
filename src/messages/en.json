@@ -208,7 +208,38 @@
     }
   },
   "about": {
-    "title": "About me"
+    "title": "About me",
+    "hero": {
+      "quote": "Every stitch I make is with love — so my creations warm not just the body, but the soul",
+      "intro": "I'm Eglė Žemgulienė — I knit, sew, and create unique handmade products in my studio in Veiviržėnai, Klaipėda district, Lithuania."
+    },
+    "story": {
+      "label": "My story",
+      "text": "I first picked up knitting needles when I was eighteen. Since then, they've become an inseparable part of my life. Over more than fifteen years, I've created not only in Lithuania but also in Norway — where I spent several years perfecting my craft and learning from the Scandinavian knitting tradition.\n\nBut I always wanted more. In 2020–2021, I learned the fundamentals of sewing at Dygsnis courses, and from 2021 to 2023, I completed a professional seamstress qualification at the Klaipėda Technology Training Centre. In 2023, I participated in an international seamstress craftsmanship competition and won first place. It was a confirmation that I was on the right path."
+    },
+    "create": {
+      "label": "What I create",
+      "text": "Today I create everything — from cozy knitted scarves and baby clothes to elegant evening dresses and home interior details. Every product is unique because each one is born from an individual vision — whether my own or a client's.\n\nI accept custom orders. Do you have a dream of a special dress, shawl, or tablecloth? Let's talk — together we'll find the best solution."
+    },
+    "principles": {
+      "label": "My principles",
+      "natural": {
+        "title": "Natural materials",
+        "text": "I work only with natural fiber yarns and high-quality fabrics — so that every product is gentle on the skin and kind to the environment"
+      },
+      "quality": {
+        "title": "Highest quality",
+        "text": "I use tools from world-renowned manufacturers — Lykke, ChiaoGoo, Bernina — because only the best tools allow you to create the best products"
+      },
+      "longevity": {
+        "title": "Longevity",
+        "text": "For me it's not just about beauty but also durability — so that every creation serves you well and brings joy every day"
+      }
+    },
+    "cta": {
+      "text": "Do you have questions or want a custom order?",
+      "button": "Get in touch"
+    }
   },
   "contacts": {
     "title": "Contacts"

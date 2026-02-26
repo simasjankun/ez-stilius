@@ -208,7 +208,38 @@
     }
   },
   "about": {
-    "title": "Apie mane"
+    "title": "Apie mane",
+    "hero": {
+      "quote": "Kiekvieną dygsnį dedu su meile – kad mano kūriniai šildytų ne tik kūną, bet ir sielą",
+      "intro": "Esu Eglė Žemgulienė – mezgu, siuvu ir kuriu unikalius rankų darbo gaminius savo studijoje Veiviržėnuose, Klaipėdos rajone."
+    },
+    "story": {
+      "label": "Mano istorija",
+      "text": "Virbalus pirmą kartą į rankas paėmiau būdama aštuoniolikos. Nuo tada jie tapo neatskiriama mano gyvenimo dalimi. Per daugiau nei penkiolika metų kūriau ne tik Lietuvoje, bet ir Norvegijoje – ten praleidau kelis metus tobulindama savo amatą ir mokydamasi iš skandinaviškos mezgimo tradicijos.\n\nTačiau visada norėjau daugiau. 2020–2021 metais įgijau siuvimo pagrindus Dygsnio kursuose, o 2021–2023 metais Klaipėdos technologijų mokymo centre baigiau siuvėjos specialybę. 2023-aisiais dalyvavau tarptautiniame siuvėjo meistriškumo konkurse ir laimėjau pirmąją vietą. Tai buvo patvirtinimas, kad einu teisingu keliu."
+    },
+    "create": {
+      "label": "Ką kuriu",
+      "text": "Šiandien kuriu viską – nuo jaukių megztų šalikėlių ir kūdikių drabužėlių iki elegantiškų vakarinių suknelių ir namų interjero detalių. Kiekvienas gaminys yra unikalus, nes kiekvienas gimsta iš individualios vizijos – ar tai būtų mano pačios, ar kliento.\n\nPriimama individualius užsakymus. Turite svajonę apie ypatingą suknelę, šalį ar staltiesę? Pakalbėkime – kartu rasime geriausią sprendimą."
+    },
+    "principles": {
+      "label": "Mano principai",
+      "natural": {
+        "title": "Natūralios medžiagos",
+        "text": "Dirbu tik su natūralių pluoštų siūlais ir aukštos kokybės audiniais – kad kiekvienas gaminys būtų malonus odai ir draugiškas aplinkai"
+      },
+      "quality": {
+        "title": "Aukščiausia kokybė",
+        "text": "Naudoju pasaulyje pripažintų gamintojų įrankius – Lykke, ChiaoGoo, Bernina – nes tik geriausi įrankiai leidžia kurti geriausius gaminius"
+      },
+      "longevity": {
+        "title": "Ilgaamžiškumas",
+        "text": "Man svarbu ne tik grožis, bet ir tvirtumas – kad kiekvienas kūrinys tarnautų ilgai ir džiugintų kasdien"
+      }
+    },
+    "cta": {
+      "text": "Turite klausimų ar norite individualaus užsakymo?",
+      "button": "Susisiekite su manimi"
+    }
   },
   "contacts": {
     "title": "Kontaktai"
