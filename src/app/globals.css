@@ -13,6 +13,8 @@
   --font-sans: "DM Sans", sans-serif;
 
   --animate-heroFadeUp: heroFadeUp 800ms ease-out both;
+  --animate-fadeIn: fadeIn 300ms ease-out both;
+  --animate-slideUp: slideUp 300ms ease-out both;
 }
 
 .scrollbar-hide {
@@ -32,4 +34,20 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }

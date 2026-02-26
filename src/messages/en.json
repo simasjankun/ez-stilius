@@ -95,12 +95,54 @@
       "knittedDress": "Knitted Dress",
       "linenNapkins": "Linen Napkins",
       "bowTie": "Bow Tie",
-      "summerShawl": "Summer Shawl"
+      "summerShawl": "Summer Shawl",
+      "winterMittens": "Winter Mittens",
+      "wovenBasket": "Woven Basket",
+      "candleCozy": "Candle Cozy",
+      "knitSweater": "Knit Sweater",
+      "linenBlouse": "Linen Blouse",
+      "yarnBundle": "Yarn Bundle",
+      "fabricScissors": "Fabric Scissors",
+      "stitchMarkers": "Stitch Markers"
     }
   },
   "shop": {
     "title": "Shop",
-    "subtitle": "All handmade products"
+    "subtitle": "All handmade products",
+    "filters": {
+      "allCategories": "All categories",
+      "sortBy": "Sort by",
+      "newest": "Newest",
+      "priceLow": "Price: low to high",
+      "priceHigh": "Price: high to low",
+      "found": "Found",
+      "clearFilters": "Clear filters",
+      "categoriesCount": "{count} categories",
+      "filtersButton": "Filters",
+      "showResults": "Show",
+      "clear": "Clear",
+      "categoriesLabel": "Categories",
+      "color": "Color",
+      "colorsSelected": "colors",
+      "colors": {
+        "cream": "Cream",
+        "olive": "Olive",
+        "pink": "Pink",
+        "sage": "Sage",
+        "dusty-rose": "Dusty Rose",
+        "sand": "Sand",
+        "lavender": "Lavender"
+      }
+    },
+    "loadMore": "Show more",
+    "noResults": {
+      "title": "No products found",
+      "subtitle": "Try changing the filters"
+    },
+    "badges": {
+      "sale": "Sale",
+      "new": "New"
+    }
   },
   "about": {
     "title": "About me"

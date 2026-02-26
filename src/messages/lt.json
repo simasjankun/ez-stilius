@@ -95,12 +95,54 @@
       "knittedDress": "Megzta suknelė",
       "linenNapkins": "Lininės servetėlės",
       "bowTie": "Peteliškė",
-      "summerShawl": "Vasarinis šalis"
+      "summerShawl": "Vasarinis šalis",
+      "winterMittens": "Žieminės pirštinės",
+      "wovenBasket": "Pinta krepšelis",
+      "candleCozy": "Žvakidės dėklas",
+      "knitSweater": "Megztas džemperis",
+      "linenBlouse": "Lininiai marškiniai",
+      "yarnBundle": "Siūlų rinkinys",
+      "fabricScissors": "Siuvimo žirklės",
+      "stitchMarkers": "Mezgimo žymekliai"
     }
   },
   "shop": {
     "title": "Parduotuvė",
-    "subtitle": "Visi rankų darbo gaminiai"
+    "subtitle": "Visi rankų darbo gaminiai",
+    "filters": {
+      "allCategories": "Visos kategorijos",
+      "sortBy": "Rūšiuoti pagal",
+      "newest": "Naujausi",
+      "priceLow": "Kaina: nuo mažiausios",
+      "priceHigh": "Kaina: nuo didžiausios",
+      "found": "Rasta",
+      "clearFilters": "Išvalyti filtrus",
+      "categoriesCount": "{count} kategorijos",
+      "filtersButton": "Filtrai",
+      "showResults": "Rodyti",
+      "clear": "Išvalyti",
+      "categoriesLabel": "Kategorijos",
+      "color": "Spalva",
+      "colorsSelected": "spalvos",
+      "colors": {
+        "cream": "Kreminė",
+        "olive": "Alyvuogių",
+        "pink": "Rožinė",
+        "sage": "Šalavijų",
+        "dusty-rose": "Dulkėta rožė",
+        "sand": "Smėlio",
+        "lavender": "Levandų"
+      }
+    },
+    "loadMore": "Rodyti daugiau",
+    "noResults": {
+      "title": "Produktų nerasta",
+      "subtitle": "Pabandykite pakeisti filtrus"
+    },
+    "badges": {
+      "sale": "Akcija",
+      "new": "Nauja"
+    }
   },
   "about": {
     "title": "Apie mane"
