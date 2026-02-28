@@ -1,4 +1,15 @@
 {
+  "nav": {
+    "megaMenu": {
+      "viewAll": "Visi produktai",
+      "promo": {
+        "title": "Nauji gaminiai"
+      }
+    },
+    "mobileMenu": {
+      "allProducts": "Visi produktai"
+    }
+  },
   "header": {
     "home": "Pagrindinis",
     "shop": "Parduotuvė",

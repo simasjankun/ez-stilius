@@ -5,8 +5,13 @@ import TopBar from './TopBar';
 import Navigation from './Navigation';
 import MobileMenu from './MobileMenu';
 import CartDrawer from './CartDrawer';
+import type { MedusaCategory } from '@/lib/categories';
 
-export default function Header() {
+interface HeaderProps {
+  categories: MedusaCategory[];
+}
+
+export default function Header({ categories }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -34,8 +39,8 @@ export default function Header() {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
-            <Navigation />
-            <MobileMenu />
+            <Navigation categories={categories} />
+            <MobileMenu categories={categories} />
           </div>
         </div>
       </header>

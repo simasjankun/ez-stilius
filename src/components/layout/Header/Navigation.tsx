@@ -7,8 +7,13 @@ import { Link } from '@/i18n/routing';
 import { useCart } from '@/context/CartContext';
 import MegaMenu from './MegaMenu';
 import SearchOverlay from './SearchOverlay';
+import type { MedusaCategory } from '@/lib/categories';
 
-export default function Navigation() {
+interface NavigationProps {
+  categories: MedusaCategory[];
+}
+
+export default function Navigation({ categories }: NavigationProps) {
   const t = useTranslations('header');
   const { openCart, cartCount } = useCart();
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
@@ -32,7 +37,10 @@ export default function Navigation() {
   }, []);
 
   return (
-    <div className="hidden md:flex items-center justify-between w-full">
+    <div
+      className="hidden md:flex items-center justify-between w-full relative"
+      onMouseLeave={closeMenu}
+    >
       <Link href="/" className="flex-shrink-0">
         <span className="font-serif text-2xl text-charcoal tracking-wide">
           EŽ Stilius
@@ -43,12 +51,7 @@ export default function Navigation() {
         <ul className="flex items-center gap-8">
           {navItems.map((item) =>
             item.hasMegaMenu ? (
-              <li
-                key={item.href}
-                className="relative"
-                onMouseEnter={openMenu}
-                onMouseLeave={closeMenu}
-              >
+              <li key={item.href} onMouseEnter={openMenu}>
                 <Link
                   href={item.href}
                   className={`block py-5 text-sm font-medium tracking-wide uppercase transition-colors ${
@@ -59,10 +62,9 @@ export default function Navigation() {
                 >
                   {item.label}
                 </Link>
-                <MegaMenu isOpen={megaMenuOpen} />
               </li>
             ) : (
-              <li key={item.href}>
+              <li key={item.href} onMouseEnter={closeMenu}>
                 <Link
                   href={item.href}
                   className="block py-5 text-charcoal hover:text-olive transition-colors text-sm font-medium tracking-wide uppercase"
@@ -70,12 +72,15 @@ export default function Navigation() {
                   {item.label}
                 </Link>
               </li>
-            )
+            ),
           )}
         </ul>
       </nav>
 
-      <div className="flex items-center gap-4">
+      <div
+        className="flex items-center gap-4"
+        onMouseEnter={closeMenu}
+      >
         <button
           onClick={() => setSearchOpen(true)}
           aria-label={t('search')}
@@ -96,6 +101,14 @@ export default function Navigation() {
           )}
         </button>
       </div>
+
+      {/* MegaMenu lives here — positioned relative to this full-width container */}
+      <MegaMenu
+        isOpen={megaMenuOpen}
+        categories={categories}
+        onMouseEnter={openMenu}
+        onMouseLeave={closeMenu}
+      />
 
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>

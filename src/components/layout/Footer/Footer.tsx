@@ -1,17 +1,9 @@
-'use client';
-
-import { useTranslations, useLocale } from 'next-intl';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { Facebook, Instagram } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { CONTACT } from '@/constants/contact';
+import { getCategories } from '@/lib/categories';
 import type { Locale } from '@/types';
-
-const CATEGORY_LINKS = [
-  { slug: 'clothing', key: 'clothing' },
-  { slug: 'sewing-supplies', key: 'sewing-supplies' },
-  { slug: 'accessories', key: 'accessories' },
-  { slug: 'interior-gifts', key: 'interior-gifts' },
-] as const;
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -29,11 +21,13 @@ function TikTokIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Footer() {
-  const t = useTranslations('footer');
-  const th = useTranslations('header');
-  const tc = useTranslations('categories');
-  const locale = useLocale() as Locale;
+export default async function Footer() {
+  const locale = (await getLocale()) as Locale;
+  const [t, th, categories] = await Promise.all([
+    getTranslations('footer'),
+    getTranslations('header'),
+    getCategories(locale),
+  ]);
   const email = CONTACT.email[locale];
   const year = new Date().getFullYear();
 
@@ -50,9 +44,7 @@ export default function Footer() {
                 EŽ Stilius
               </span>
             </Link>
-            <p className="text-[#A09A90] text-sm mt-3">
-              {t('tagline')}
-            </p>
+            <p className="text-[#A09A90] text-sm mt-3">{t('tagline')}</p>
             <div className="flex items-center gap-4 mt-6 justify-center md:justify-start">
               <a
                 href={CONTACT.social.facebook}
@@ -105,19 +97,19 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3 — Categories */}
+          {/* Column 3 — Categories (from API) */}
           <div>
             <h3 className="text-cream text-sm uppercase tracking-widest font-semibold mb-4">
               {t('categories')}
             </h3>
             <ul className="space-y-2.5">
-              {CATEGORY_LINKS.map(({ slug, key }) => (
-                <li key={slug}>
+              {categories.map((cat) => (
+                <li key={cat.handle}>
                   <Link
-                    href={`/shop/${slug}`}
+                    href={`/shop/${cat.handle}`}
                     className="text-[#A09A90] text-sm hover:text-olive transition-colors leading-relaxed"
                   >
-                    {tc(`${key}.label`)}
+                    {cat.name}
                   </Link>
                 </li>
               ))}
@@ -150,7 +142,9 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-sand/15 mt-12 pt-6">
           <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0 text-xs text-[#A09A90]">
-            <span>&copy; {year} EŽ Stilius. {t('copyright')}</span>
+            <span>
+              &copy; {year} EŽ Stilius. {t('copyright')}
+            </span>
             <span className="hidden md:inline md:mx-3">·</span>
             <div className="flex items-center gap-3">
               <Link href="/privacy" className="hover:text-olive transition-colors">

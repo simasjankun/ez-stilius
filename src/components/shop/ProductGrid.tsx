@@ -17,21 +17,33 @@ function parseParam(param: string | null): string[] {
   return param.split(',').filter(Boolean);
 }
 
+interface FilterOption {
+  value: string;
+  label: string;
+}
+
 interface ProductGridProps {
   /** When set, products are pre-filtered by this category and the category filter is hidden. */
   lockedCategory?: string;
+  /** Category options for the filter dropdown (from Medusa API, passed by parent server component). */
+  categoryOptions?: FilterOption[];
 }
 
-export default function ProductGrid({ lockedCategory }: ProductGridProps) {
+export default function ProductGrid({
+  lockedCategory,
+  categoryOptions = [],
+}: ProductGridProps) {
   const t = useTranslations('shop');
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
   const [categories, setCategories] = useState<string[]>(() =>
-    lockedCategory ? [] : parseParam(searchParams.get('category'))
+    lockedCategory ? [] : parseParam(searchParams.get('category')),
   );
-  const [colors, setColors] = useState<string[]>(() => parseParam(searchParams.get('color')));
+  const [colors, setColors] = useState<string[]>(() =>
+    parseParam(searchParams.get('color')),
+  );
   const [sort, setSort] = useState(searchParams.get('sort') ?? '');
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
@@ -42,13 +54,20 @@ export default function ProductGrid({ lockedCategory }: ProductGridProps) {
     setVisibleCount(INITIAL_VISIBLE);
   }, [searchParams, lockedCategory]);
 
-  function updateUrl(nextCategories: string[], nextColors: string[], nextSort: string) {
+  function updateUrl(
+    nextCategories: string[],
+    nextColors: string[],
+    nextSort: string,
+  ) {
     const params = new URLSearchParams();
-    if (!lockedCategory && nextCategories.length > 0) params.set('category', nextCategories.join(','));
+    if (!lockedCategory && nextCategories.length > 0)
+      params.set('category', nextCategories.join(','));
     if (nextColors.length > 0) params.set('color', nextColors.join(','));
     if (nextSort) params.set('sort', nextSort);
     const query = params.toString();
-    router.push(`${pathname}${query ? `?${query}` : ''}` as '/shop', { scroll: false });
+    router.push(`${pathname}${query ? `?${query}` : ''}` as '/shop', {
+      scroll: false,
+    });
   }
 
   function handleCategoriesChange(values: string[]) {
@@ -89,7 +108,9 @@ export default function ProductGrid({ lockedCategory }: ProductGridProps) {
     }
 
     if (colors.length > 0) {
-      result = result.filter((p) => p.colors && p.colors.some((c) => colors.includes(c)));
+      result = result.filter(
+        (p) => p.colors && p.colors.some((c) => colors.includes(c)),
+      );
     }
 
     if (sort === 'price-asc') {
@@ -97,7 +118,10 @@ export default function ProductGrid({ lockedCategory }: ProductGridProps) {
     } else if (sort === 'price-desc') {
       result.sort((a, b) => b.price - a.price);
     } else {
-      result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      result.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
     }
 
     return result;
@@ -121,6 +145,7 @@ export default function ProductGrid({ lockedCategory }: ProductGridProps) {
         hasActiveFilters={hasActiveFilters}
         resultCount={filtered.length}
         showCategoryFilter={!lockedCategory}
+        categoryOptions={categoryOptions}
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 pb-16 md:pb-24">

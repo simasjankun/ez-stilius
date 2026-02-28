@@ -1,12 +1,2 @@
-export const categories = [
-  { slug: 'clothing', translationKey: 'categories.clothing' },
-  { slug: 'sewing-supplies', translationKey: 'categories.sewingSupplies' },
-  { slug: 'accessories', translationKey: 'categories.accessories' },
-  { slug: 'interior-gifts', translationKey: 'categories.interiorGifts' },
-] as const;
-
-export type CategorySlug = (typeof categories)[number]['slug'];
-
-export function getCategoryBySlug(slug: string) {
-  return categories.find((c) => c.slug === slug);
-}
+// Categories are now fetched from the Medusa API via src/lib/categories.ts
+// This file is no longer used for navigation or validation.

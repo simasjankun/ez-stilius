@@ -1,11 +1,21 @@
 import { Suspense } from 'react';
-import { useTranslations } from 'next-intl';
+import { getTranslations, getLocale } from 'next-intl/server';
+import { getCategories } from '@/lib/categories';
 import PageHero from '@/components/sections/PageHero';
 import ProductGrid from '@/components/shop/ProductGrid';
 
-export default function ShopPage() {
-  const t = useTranslations('shop');
-  const tb = useTranslations('breadcrumb');
+export default async function ShopPage() {
+  const locale = await getLocale();
+  const [t, tb, categories] = await Promise.all([
+    getTranslations('shop'),
+    getTranslations('breadcrumb'),
+    getCategories(locale),
+  ]);
+
+  const categoryOptions = categories.map((cat) => ({
+    value: cat.handle,
+    label: cat.name,
+  }));
 
   return (
     <>
@@ -18,7 +28,7 @@ export default function ShopPage() {
         ]}
       />
       <Suspense>
-        <ProductGrid />
+        <ProductGrid categoryOptions={categoryOptions} />
       </Suspense>
     </>
   );

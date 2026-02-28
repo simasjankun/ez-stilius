@@ -5,12 +5,12 @@ import { getCategories } from '@/lib/categories';
 import PageHero from '@/components/sections/PageHero';
 import ProductGrid from '@/components/shop/ProductGrid';
 
-export default async function CategoryPage({
+export default async function SubcategoryPage({
   params,
 }: {
-  params: Promise<{ category: string }>;
+  params: Promise<{ category: string; subcategory: string }>;
 }) {
-  const { category: handle } = await params;
+  const { category: parentHandle, subcategory: childHandle } = await params;
   const locale = await getLocale();
 
   const [categories, t, tb] = await Promise.all([
@@ -19,22 +19,26 @@ export default async function CategoryPage({
     getTranslations('breadcrumb'),
   ]);
 
-  const category = categories.find((c) => c.handle === handle);
-  if (!category) notFound();
+  const parent = categories.find((c) => c.handle === parentHandle);
+  if (!parent) notFound();
+
+  const child = parent.category_children?.find((c) => c.handle === childHandle);
+  if (!child) notFound();
 
   return (
     <>
       <PageHero
-        title={category.name}
-        subtitle={category.description ?? ''}
+        title={child.name}
+        subtitle={child.description ?? ''}
         breadcrumbs={[
           { label: tb('home'), href: '/' },
           { label: t('title'), href: '/shop' },
-          { label: category.name },
+          { label: parent.name, href: `/shop/${parentHandle}` },
+          { label: child.name },
         ]}
       />
       <Suspense>
-        <ProductGrid lockedCategory={handle} />
+        <ProductGrid lockedCategory={childHandle} />
       </Suspense>
     </>
   );

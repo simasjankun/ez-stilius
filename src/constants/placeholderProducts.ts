@@ -55,7 +55,7 @@ export const placeholderProducts: PlaceholderProduct[] = [
   // interior-gifts
   {
     id: '2', slug: 'lace-tablecloth', nameKey: 'products.placeholder.laceTablecloth',
-    price: 59.00, category: 'interior-gifts', createdAt: '2024-08-05',
+    price: 59.00, category: 'interior', createdAt: '2024-08-05',
     colors: ['cream'],
     descriptionKey: 'products.descriptions.laceTablecloth',
     details: { materialKey: 'products.materials.laceTablecloth', careKey: 'products.care.laceTablecloth' },
@@ -63,7 +63,7 @@ export const placeholderProducts: PlaceholderProduct[] = [
   },
   {
     id: '6', slug: 'linen-napkins', nameKey: 'products.placeholder.linenNapkins',
-    price: 17.00, category: 'interior-gifts', createdAt: '2024-06-18',
+    price: 17.00, category: 'interior', createdAt: '2024-06-18',
     colors: ['cream', 'sand'],
     descriptionKey: 'products.descriptions.linenNapkins',
     details: { materialKey: 'products.materials.linenNapkins', careKey: 'products.care.linenNapkins' },
@@ -71,7 +71,7 @@ export const placeholderProducts: PlaceholderProduct[] = [
   },
   {
     id: '10', slug: 'woven-basket', nameKey: 'products.placeholder.wovenBasket',
-    price: 34.00, originalPrice: 42.00, category: 'interior-gifts', createdAt: '2024-09-01',
+    price: 34.00, originalPrice: 42.00, category: 'interior', createdAt: '2024-09-01',
     colors: ['sand'],
     descriptionKey: 'products.descriptions.wovenBasket',
     details: { materialKey: 'products.materials.wovenBasket', careKey: 'products.care.wovenBasket' },
@@ -79,7 +79,7 @@ export const placeholderProducts: PlaceholderProduct[] = [
   },
   {
     id: '11', slug: 'candle-cozy', nameKey: 'products.placeholder.candleCozy',
-    price: 22.00, category: 'interior-gifts', isNew: true, createdAt: '2024-11-01',
+    price: 22.00, category: 'interior', isNew: true, createdAt: '2024-11-01',
     colors: ['lavender'],
     descriptionKey: 'products.descriptions.candleCozy',
     details: { materialKey: 'products.materials.candleCozy', careKey: 'products.care.candleCozy' },
@@ -123,14 +123,14 @@ export const placeholderProducts: PlaceholderProduct[] = [
   // sewing-supplies
   {
     id: '4', slug: 'crochet-hooks-set', nameKey: 'products.placeholder.crochetHooksSet',
-    price: 12.99, category: 'sewing-supplies', createdAt: '2024-06-01',
+    price: 12.99, category: 'craft-supplies', createdAt: '2024-06-01',
     descriptionKey: 'products.descriptions.crochetHooksSet',
     details: { materialKey: 'products.materials.crochetHooksSet', careKey: 'products.care.crochetHooksSet' },
     images: 3,
   },
   {
     id: '14', slug: 'yarn-bundle', nameKey: 'products.placeholder.yarnBundle',
-    price: 18.00, originalPrice: 24.00, category: 'sewing-supplies', isNew: true, createdAt: '2024-11-15',
+    price: 18.00, originalPrice: 24.00, category: 'craft-supplies', isNew: true, createdAt: '2024-11-15',
     colors: ['cream', 'olive', 'pink'],
     descriptionKey: 'products.descriptions.yarnBundle',
     details: { materialKey: 'products.materials.yarnBundle', careKey: 'products.care.yarnBundle' },
@@ -138,14 +138,14 @@ export const placeholderProducts: PlaceholderProduct[] = [
   },
   {
     id: '15', slug: 'fabric-scissors', nameKey: 'products.placeholder.fabricScissors',
-    price: 14.00, category: 'sewing-supplies', createdAt: '2024-07-05',
+    price: 14.00, category: 'craft-supplies', createdAt: '2024-07-05',
     descriptionKey: 'products.descriptions.fabricScissors',
     details: { materialKey: 'products.materials.fabricScissors', careKey: 'products.care.fabricScissors' },
     images: 3,
   },
   {
     id: '16', slug: 'stitch-markers', nameKey: 'products.placeholder.stitchMarkers',
-    price: 7.50, category: 'sewing-supplies', createdAt: '2024-09-10',
+    price: 7.50, category: 'craft-supplies', createdAt: '2024-09-10',
     descriptionKey: 'products.descriptions.stitchMarkers',
     details: { materialKey: 'products.materials.stitchMarkers', careKey: 'products.care.stitchMarkers' },
     images: 3,

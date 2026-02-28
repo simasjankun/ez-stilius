@@ -1,4 +1,15 @@
 {
+  "nav": {
+    "megaMenu": {
+      "viewAll": "All products",
+      "promo": {
+        "title": "New arrivals"
+      }
+    },
+    "mobileMenu": {
+      "allProducts": "All products"
+    }
+  },
   "header": {
     "home": "Home",
     "shop": "Shop",

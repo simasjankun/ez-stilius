@@ -17,6 +17,10 @@
   --animate-slideUp: slideUp 300ms ease-out both;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 .scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;

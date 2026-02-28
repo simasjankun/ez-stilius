@@ -1,8 +1,7 @@
-import { use } from 'react';
-import { useTranslations } from 'next-intl';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { placeholderProducts } from '@/constants/placeholderProducts';
-import { getCategoryBySlug } from '@/constants/categories';
+import { getCategories } from '@/lib/categories';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import ProductGallery from '@/components/product/ProductGallery';
 import ProductInfo from '@/components/product/ProductInfo';
@@ -12,28 +11,35 @@ export function generateStaticParams() {
   return placeholderProducts.map((p) => ({ slug: p.slug }));
 }
 
-export default function ProductPage({
+export default async function ProductPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = use(params);
+  const { slug } = await params;
   const product = placeholderProducts.find((p) => p.slug === slug);
 
   if (!product) notFound();
 
-  const t = useTranslations();
-  const tb = useTranslations('breadcrumb');
-  const ts = useTranslations('shop');
+  const locale = await getLocale();
+  const [t, tb, ts, categories] = await Promise.all([
+    getTranslations(),
+    getTranslations('breadcrumb'),
+    getTranslations('shop'),
+    getCategories(locale),
+  ]);
 
-  const category = getCategoryBySlug(product.category);
-  const categoryName = category ? t(`${category.translationKey}.name`) : '';
-  const productName = t(product.nameKey);
+  const apiCategory = categories.find((c) => c.handle === product.category);
+  const categoryName = apiCategory?.name ?? '';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const productName = t(product.nameKey as any);
 
   const breadcrumbs = [
     { label: tb('home'), href: '/' },
     { label: ts('title'), href: '/shop' },
-    ...(category ? [{ label: categoryName, href: `/shop/${product.category}` }] : []),
+    ...(apiCategory
+      ? [{ label: categoryName, href: `/shop/${product.category}` }]
+      : []),
     { label: productName },
   ];
 

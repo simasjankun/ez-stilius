@@ -8,6 +8,11 @@ import CustomDropdown from '@/components/ui/CustomDropdown';
 import ColorDropdown from '@/components/ui/ColorDropdown';
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer';
 
+interface FilterOption {
+  value: string;
+  label: string;
+}
+
 interface FilterBarProps {
   categories?: string[];
   colors: string[];
@@ -19,6 +24,7 @@ interface FilterBarProps {
   hasActiveFilters: boolean;
   resultCount: number;
   showCategoryFilter?: boolean;
+  categoryOptions?: FilterOption[];
 }
 
 export default function FilterBar({
@@ -32,28 +38,24 @@ export default function FilterBar({
   hasActiveFilters,
   resultCount,
   showCategoryFilter = true,
+  categoryOptions = [],
 }: FilterBarProps) {
   const t = useTranslations('shop.filters');
-  const tc = useTranslations('categories');
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const categoryOptions = [
-    { value: 'clothing',        label: tc('clothing.label') },
-    { value: 'sewing-supplies', label: tc('sewing-supplies.label') },
-    { value: 'accessories',     label: tc('accessories.label') },
-    { value: 'interior-gifts',  label: tc('interior-gifts.label') },
-  ];
-
   const sortOptions = [
-    { value: 'newest',     label: t('newest') },
-    { value: 'price-asc',  label: t('priceLow') },
+    { value: 'newest', label: t('newest') },
+    { value: 'price-asc', label: t('priceLow') },
     { value: 'price-desc', label: t('priceHigh') },
   ];
 
   function getCategoryLabel(): string {
     if (categories.length === 0) return t('allCategories');
     if (categories.length === 1) {
-      return categoryOptions.find((o) => o.value === categories[0])?.label ?? t('allCategories');
+      return (
+        categoryOptions.find((o) => o.value === categories[0])?.label ??
+        t('allCategories')
+      );
     }
     return t('categoriesCount', { count: categories.length });
   }
@@ -64,7 +66,8 @@ export default function FilterBar({
     return `${colors.length} ${t('colorsSelected')}`;
   }
 
-  const activeFilterCount = (showCategoryFilter ? categories.length : 0) + colors.length;
+  const activeFilterCount =
+    (showCategoryFilter ? categories.length : 0) + colors.length;
 
   return (
     <>
@@ -73,7 +76,7 @@ export default function FilterBar({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="flex flex-wrap items-center gap-3 flex-1">
-              {showCategoryFilter && (
+              {showCategoryFilter && categoryOptions.length > 0 && (
                 <MultiSelectDropdown
                   options={categoryOptions}
                   values={categories}
@@ -111,7 +114,8 @@ export default function FilterBar({
               )}
             </div>
             <p className="text-sm text-warm-gray shrink-0">
-              {t('found')}: <span className="text-charcoal font-medium">{resultCount}</span>
+              {t('found')}:{' '}
+              <span className="text-charcoal font-medium">{resultCount}</span>
             </p>
           </div>
         </div>
@@ -143,7 +147,8 @@ export default function FilterBar({
             />
           </div>
           <p className="text-xs text-warm-gray text-center mt-2">
-            {t('found')}: <span className="text-charcoal font-medium">{resultCount}</span>
+            {t('found')}:{' '}
+            <span className="text-charcoal font-medium">{resultCount}</span>
           </p>
         </div>
       </div>

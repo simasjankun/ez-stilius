@@ -2,58 +2,102 @@
 
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
-
-const CATEGORIES = [
-  { slug: 'clothing', image: '/images/categories/category-clothing.png' },
-  { slug: 'sewing-supplies', image: '/images/categories/category-sewing-supplies.png' },
-  { slug: 'accessories', image: '/images/categories/category-accessories.png' },
-  { slug: 'interior-gifts', image: '/images/categories/category-interior-gifts.png' },
-] as const;
+import type { MedusaCategory } from '@/lib/categories';
 
 interface MegaMenuProps {
   isOpen: boolean;
+  categories: MedusaCategory[];
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
 }
 
-export default function MegaMenu({ isOpen }: MegaMenuProps) {
-  const t = useTranslations('categories');
+export default function MegaMenu({
+  isOpen,
+  categories = [],
+  onMouseEnter,
+  onMouseLeave,
+}: MegaMenuProps) {
+  const t = useTranslations('nav.megaMenu');
 
   return (
     <div
-      className={`absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 transition-all duration-200 ease-in-out ${
+      className={`absolute left-[calc(-50vw+50%)] top-full z-40 w-screen transition-all duration-200 ease-out ${
         isOpen
           ? 'opacity-100 translate-y-0 visible'
           : 'opacity-0 -translate-y-1 invisible pointer-events-none'
       }`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
-      <div className="before:absolute before:inset-x-0 before:-top-3 before:h-3" />
-      <div className="bg-white shadow-lg border-t border-sand">
+      {/* Invisible bridge to prevent gap between nav link and menu */}
+      <div className="absolute inset-x-0 -top-3 h-3" />
+
+      <div className="bg-[#FAF8F5] border-t border-sand shadow-lg shadow-black/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-4 gap-6">
-            {CATEGORIES.map(({ slug, image }) => (
-              <Link
-                key={slug}
-                href={`/shop/${slug}`}
-                className="group cursor-pointer"
-              >
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden mb-3 bg-sand">
+          <div className="flex gap-10">
+            {/* Left: category columns */}
+            <div className="flex-1 grid gap-8" style={{ gridTemplateColumns: `repeat(${Math.max(categories.length, 1)}, minmax(0, 1fr))` }}>
+              {categories.length === 0 ? (
+                <div />
+              ) : (
+                categories.map((cat) => (
+                  <div key={cat.handle} className="min-w-0">
+                    <Link
+                      href={`/shop/${cat.handle}`}
+                      className="block font-serif text-base font-semibold text-charcoal hover:text-olive transition-colors leading-snug"
+                    >
+                      {cat.name}
+                    </Link>
+                    <div className="w-8 h-0.5 bg-olive/40 my-2" />
+                    {cat.category_children && cat.category_children.length > 0 && (
+                      <ul className="space-y-1.5">
+                        {cat.category_children.map((child) => (
+                          <li key={child.handle}>
+                            <Link
+                              href={`/shop/${cat.handle}/${child.handle}`}
+                              className="text-sm text-warm-gray hover:text-olive transition-colors leading-snug"
+                            >
+                              {child.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Right: promo block */}
+            <div className="flex-shrink-0 w-[180px]">
+              <Link href="/shop" className="group block">
+                <div className="relative w-[180px] aspect-[3/4] rounded-lg overflow-hidden bg-sand">
                   <Image
-                    src={image}
-                    alt={t(`${slug}.label`)}
+                    src="/images/promo/mega-menu-promo.png"
+                    alt={t('promo.title')}
                     fill
-                    className="object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
-                    sizes="(min-width: 1280px) 280px, 25vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="180px"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/20 to-transparent pointer-events-none" />
                 </div>
-                <h3 className="font-serif text-lg text-charcoal group-hover:text-olive transition-colors">
-                  {t(`${slug}.label`)}
-                </h3>
-                <p className="text-sm text-warm-gray mt-1">
-                  {t(`${slug}.description`)}
+                <p className="mt-2 text-sm font-medium text-charcoal">
+                  {t('promo.title')}
                 </p>
               </Link>
-            ))}
+            </div>
+          </div>
+
+          {/* Bottom: view all link */}
+          <div className="mt-6 pt-5 border-t border-sand/60 flex justify-center">
+            <Link
+              href="/shop"
+              className="flex items-center gap-1.5 text-sm text-olive hover:underline transition-colors"
+            >
+              {t('viewAll')}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
       </div>

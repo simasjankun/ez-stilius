@@ -8,8 +8,8 @@ import {
   X,
   Search,
   ShoppingBag,
-  ChevronRight,
-  ChevronLeft,
+  Plus,
+  Minus,
   Phone,
   Mail,
 } from 'lucide-react';
@@ -19,21 +19,11 @@ import { useRouter, usePathname } from '@/i18n/routing';
 import { useCart } from '@/context/CartContext';
 import { CONTACT } from '@/constants/contact';
 import type { Locale } from '@/types';
+import type { MedusaCategory } from '@/lib/categories';
 
-const CATEGORY_SLUGS = [
-  'clothing',
-  'sewing-supplies',
-  'accessories',
-  'interior-gifts',
-] as const;
-
-const NAV_ITEMS = ['home', 'shop', 'about', 'contacts'] as const;
-const NAV_HREFS: Record<string, string> = {
-  home: '/',
-  shop: '/shop',
-  about: '/about',
-  contacts: '/contacts',
-};
+interface MobileMenuProps {
+  categories: MedusaCategory[];
+}
 
 function MobileFooter({ locale }: { locale: Locale }) {
   const currentLocale = useLocale() as Locale;
@@ -111,13 +101,51 @@ function CartButton({ onClick, label }: { onClick: () => void; label: string }) 
   );
 }
 
-export default function MobileMenu() {
+function AccordionRow({
+  trigger,
+  isOpen,
+  onToggle,
+  children,
+}: {
+  trigger: React.ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        {trigger}
+        <button
+          onClick={onToggle}
+          className="cursor-pointer p-2 text-warm-gray hover:text-charcoal transition-colors flex-shrink-0"
+          aria-expanded={isOpen}
+        >
+          {isOpen ? (
+            <Minus className="h-4 w-4" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+      >
+        <div className="overflow-hidden">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export default function MobileMenu({ categories }: MobileMenuProps) {
   const t = useTranslations('header');
-  const tc = useTranslations('categories');
   const locale = useLocale() as Locale;
   const { openCart } = useCart();
   const [isOpen, setIsOpen] = useState(false);
-  const [showShop, setShowShop] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [animateItems, setAnimateItems] = useState(false);
@@ -129,7 +157,8 @@ export default function MobileMenu() {
   const close = useCallback(() => {
     setIsOpen(false);
     setTimeout(() => {
-      setShowShop(false);
+      setShopOpen(false);
+      setOpenCategory(null);
       setAnimateItems(false);
     }, 300);
   }, []);
@@ -154,132 +183,166 @@ export default function MobileMenu() {
 
   const overlay = (
     <div
-      className={`fixed inset-0 z-50 bg-cream md:hidden transition-transform duration-300 ease-out ${
+      className={`fixed inset-0 z-50 bg-cream md:hidden transition-transform duration-300 ease-out flex flex-col ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
       style={{ width: '100vw', height: '100dvh' }}
     >
-      <div className="relative w-full h-full overflow-hidden">
-        {/* ═══ PANEL 1: Main Navigation ═══ */}
-        <div
-          className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-out ${
-            showShop ? '-translate-x-full' : 'translate-x-0'
-          }`}
-        >
-          {/* Zone 1: Header */}
-          <div className="flex items-center justify-between h-16 px-4 border-b border-sand/50 flex-shrink-0">
-            <Link href="/" onClick={close} className="flex-shrink-0">
-              <span className="font-serif text-xl text-charcoal tracking-wide">
-                EŽ Stilius
-              </span>
-            </Link>
-            <div className="flex items-center gap-3">
-              <CartButton onClick={handleCartClick} label={t('cart')} />
-              <button
-                onClick={close}
-                aria-label={t('closeMenu')}
-                className="cursor-pointer text-charcoal p-1"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-          </div>
-
-          {/* Zone 2: Navigation */}
-          <div className="flex-1 flex items-center justify-center">
-            <nav>
-              <ul className="flex flex-col items-center gap-6">
-                {NAV_ITEMS.map((key, i) => (
-                  <li
-                    key={key}
-                    className="transition-all duration-500 ease-out"
-                    style={{
-                      opacity: animateItems ? 1 : 0,
-                      transform: animateItems
-                        ? 'translateY(0)'
-                        : 'translateY(12px)',
-                      transitionDelay: `${i * 60}ms`,
-                    }}
-                  >
-                    {key === 'shop' ? (
-                      <button
-                        onClick={() => setShowShop(true)}
-                        className="cursor-pointer flex items-center gap-2.5 text-charcoal active:text-olive transition-colors"
-                      >
-                        <span className="font-serif text-2xl tracking-wide">
-                          {t(key)}
-                        </span>
-                        <ChevronRight className="h-4.5 w-4.5 text-warm-gray" />
-                      </button>
-                    ) : (
-                      <Link
-                        href={NAV_HREFS[key]}
-                        onClick={close}
-                        className="block font-serif text-2xl text-charcoal tracking-wide active:text-olive transition-colors"
-                      >
-                        {t(key)}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Zone 3: Footer */}
-          <MobileFooter locale={locale} />
-        </div>
-
-        {/* ═══ PANEL 2: Shop Categories ═══ */}
-        <div
-          className={`absolute inset-0 flex flex-col transition-transform duration-300 ease-out ${
-            showShop ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          {/* Zone 1: Header with Back */}
-          <div className="flex items-center justify-between h-16 px-4 border-b border-sand/50 flex-shrink-0">
-            <button
-              onClick={() => setShowShop(false)}
-              className="cursor-pointer flex items-center gap-1.5 text-charcoal"
-            >
-              <ChevronLeft className="h-5 w-5" />
-              <span className="text-sm font-medium">{t('back')}</span>
-            </button>
-            <div className="flex items-center gap-3">
-              <CartButton onClick={handleCartClick} label={t('cart')} />
-              <button
-                onClick={close}
-                aria-label={t('closeMenu')}
-                className="cursor-pointer text-charcoal p-1"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-          </div>
-
-          {/* Zone 2: Categories */}
-          <div className="flex-1 flex items-center justify-center">
-            <nav>
-              <ul className="flex flex-col items-center gap-6">
-                {CATEGORY_SLUGS.map((slug) => (
-                  <li key={slug}>
-                    <Link
-                      href={`/shop/${slug}`}
-                      onClick={close}
-                      className="block font-serif text-2xl text-charcoal tracking-wide active:text-olive transition-colors text-center"
-                    >
-                      {tc(`${slug}.label`)}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Zone 3: Footer */}
-          <MobileFooter locale={locale} />
+      {/* Header bar */}
+      <div className="flex items-center justify-between h-16 px-4 border-b border-sand/50 flex-shrink-0">
+        <Link href="/" onClick={close} className="flex-shrink-0">
+          <span className="font-serif text-xl text-charcoal tracking-wide">
+            EŽ Stilius
+          </span>
+        </Link>
+        <div className="flex items-center gap-3">
+          <CartButton onClick={handleCartClick} label={t('cart')} />
+          <button
+            onClick={close}
+            aria-label={t('closeMenu')}
+            className="cursor-pointer text-charcoal p-1"
+          >
+            <X className="h-6 w-6" />
+          </button>
         </div>
       </div>
+
+      {/* Scrollable nav content */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <nav>
+          <ul className="space-y-0">
+            {/* Home */}
+            <li
+              className="transition-all duration-500 ease-out"
+              style={{
+                opacity: animateItems ? 1 : 0,
+                transform: animateItems ? 'translateY(0)' : 'translateY(12px)',
+                transitionDelay: '0ms',
+              }}
+            >
+              <Link
+                href="/"
+                onClick={close}
+                className="block font-serif text-2xl text-charcoal tracking-wide active:text-olive transition-colors py-3"
+              >
+                {t('home')}
+              </Link>
+            </li>
+
+            {/* Shop — accordion */}
+            <li
+              className="transition-all duration-500 ease-out"
+              style={{
+                opacity: animateItems ? 1 : 0,
+                transform: animateItems ? 'translateY(0)' : 'translateY(12px)',
+                transitionDelay: '60ms',
+              }}
+            >
+              <AccordionRow
+                trigger={
+                  <Link
+                    href="/shop"
+                    onClick={close}
+                    className="font-serif text-2xl text-charcoal tracking-wide active:text-olive transition-colors py-3 block flex-1"
+                  >
+                    {t('shop')}
+                  </Link>
+                }
+                isOpen={shopOpen}
+                onToggle={() => setShopOpen((v) => !v)}
+              >
+                <div className="pl-2 pb-4 pt-1 space-y-0.5">
+                  {/* Root categories */}
+                  {categories.map((cat) =>
+                    cat.category_children && cat.category_children.length > 0 ? (
+                      <AccordionRow
+                        key={cat.handle}
+                        trigger={
+                          <Link
+                            href={`/shop/${cat.handle}`}
+                            onClick={close}
+                            className="text-lg text-charcoal active:text-olive transition-colors py-2 block flex-1"
+                          >
+                            {cat.name}
+                          </Link>
+                        }
+                        isOpen={openCategory === cat.handle}
+                        onToggle={() =>
+                          setOpenCategory((prev) =>
+                            prev === cat.handle ? null : cat.handle,
+                          )
+                        }
+                      >
+                        <div className="pl-4 pb-2 pt-1 space-y-0.5">
+                          {cat.category_children.map((child) => (
+                            <Link
+                              key={child.handle}
+                              href={`/shop/${cat.handle}/${child.handle}`}
+                              onClick={close}
+                              className="block text-base text-warm-gray hover:text-olive py-1.5 transition-colors"
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </AccordionRow>
+                    ) : (
+                      <div key={cat.handle} className="py-2">
+                        <Link
+                          href={`/shop/${cat.handle}`}
+                          onClick={close}
+                          className="text-lg text-charcoal active:text-olive transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </AccordionRow>
+            </li>
+
+            {/* About */}
+            <li
+              className="transition-all duration-500 ease-out"
+              style={{
+                opacity: animateItems ? 1 : 0,
+                transform: animateItems ? 'translateY(0)' : 'translateY(12px)',
+                transitionDelay: '120ms',
+              }}
+            >
+              <Link
+                href="/about"
+                onClick={close}
+                className="block font-serif text-2xl text-charcoal tracking-wide active:text-olive transition-colors py-3"
+              >
+                {t('about')}
+              </Link>
+            </li>
+
+            {/* Contacts */}
+            <li
+              className="transition-all duration-500 ease-out"
+              style={{
+                opacity: animateItems ? 1 : 0,
+                transform: animateItems ? 'translateY(0)' : 'translateY(12px)',
+                transitionDelay: '180ms',
+              }}
+            >
+              <Link
+                href="/contacts"
+                onClick={close}
+                className="block font-serif text-2xl text-charcoal tracking-wide active:text-olive transition-colors py-3"
+              >
+                {t('contacts')}
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Sticky footer */}
+      <MobileFooter locale={locale} />
     </div>
   );
 
