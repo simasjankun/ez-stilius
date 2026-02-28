@@ -1,155 +1,139 @@
-# EŽ Stilius — E-commerce Store
+# EŽ Stilius
 
-A premium e-commerce store for handmade knitted, crocheted, and sewn products. Built as a headless commerce solution with a custom Next.js frontend, designed to feel warm, artisanal, and elegant — like walking into a cozy handmade boutique.
+> Rankų darbo gaminiai su meile — an e-commerce storefront for Lithuanian handmade goods artisan Eglė Žemgulienė.
 
-## Tech Stack
+Headless commerce frontend built with Next.js 15, designed to feel warm, artisanal, and elegant. Categories, products, and translations are powered by a live Medusa v2 backend.
 
-- **Next.js 15** (App Router, `src/` directory)
-- **TypeScript** (strict mode)
-- **Tailwind CSS 4** (custom theme with handcrafted color palette)
-- **next-intl** (full i18n: Lithuanian, English)
-- **Lucide React** (elegant, thin-line icons)
-- **Google Fonts** — Playfair Display (serif) + DM Sans (sans-serif)
-- **Medusa.js** (backend — planned)
-- **Stripe** (payments — planned)
+---
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| i18n | next-intl — `lt` (default), `en` |
+| Backend | Medusa v2 |
+| Fonts | Playfair Display + DM Sans |
+| Icons | Lucide React |
+| Deployment | Vercel |
+
+---
 
 ## Features
 
-### Header & Navigation
-- **TopBar** with contact info (phone, locale-aware email) and language switcher
-- **Desktop navigation** with logo, nav links, search icon, and cart icon
-- **Mega Menu** — full-width dropdown on "Shop" hover with category cards, images, hover zoom effect, and gradient overlays
-- **Sticky behavior** — TopBar hides on scroll, main nav becomes sticky with backdrop blur and shadow
+- **Dynamic navigation** — Mega menu (desktop) and accordion menu (mobile) with categories and subcategories fetched live from Medusa API
+- **Full i18n** — Lithuanian and English, including Medusa category translations (`lt-LT` / `en`)
+- **Server components** — Header, Footer, and CategoriesSection fetch data server-side with 5-minute cache
+- **Shop** — filtering by category, color, and sort order with URL params; load more pagination
+- **Subcategory routing** — `/shop/[category]/[subcategory]` with API validation
+- **Contact form** — via Resend API with graceful fallback when unconfigured
+- **Cart drawer** — slide-in cart with React Context, ready for Medusa checkout integration
+- **Search overlay** — desktop panel + mobile full-screen
+- **Responsive** — mobile-first, with safe-area insets for notched iPhones
 
-### Mobile Menu
-- Premium editorial-style full-screen overlay with slide-in animation
-- Serif typography (Playfair Display), generous spacing, no divider lines
-- **Shop sub-menu** with horizontal slide transition between panels (not accordion)
-- Staggered fade-in animation on nav links
-- Contact info and language switcher (LT / EN with dot separator) pinned to bottom
-- `env(safe-area-inset-bottom)` for notched iPhones
-- Body scroll lock when open
-
-### Search Overlay
-- Desktop: centered panel drops down from header with backdrop blur
-- Mobile: full-screen overlay
-- Large elegant input with auto-focus and olive focus border
-- Popular search tags as rounded pills
-- "Coming soon" state with sparkle icon when typing
-- Close via Escape key, backdrop click, or X button
-
-### Cart Drawer
-- Slide-from-right drawer with backdrop blur
-- Empty state with large icon, warm copy, and CTA to shop
-- Full cart UI structure ready for Medusa integration (item cards, quantity controls, sticky footer with total and checkout)
-- React Context (`CartContext`) for state management
-- Cart badge in header hides when count is 0
-
-### Pages & Heroes
-- **HomeHero** — full-viewport hero with warm gradient, radial olive glow, subtle textile pattern overlay, staggered fade-in animations, and olive CTA button
-- **PageHero** — compact reusable hero with breadcrumbs, title, and optional subtitle
-- All page routes: Home, Shop, Shop/[category], About, Contacts
-- Dynamic category pages with `generateStaticParams`
-
-### Design System
-- Custom color palette: cream, olive, charcoal, sand, warm-gray
-- Serif + sans-serif font pairing
-- Consistent animations (`heroFadeUp` keyframes)
-- Semantic HTML throughout (`<header>`, `<nav>`, `<main>`, `<section>`)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-
-### Installation
-
-```bash
-npm install
-```
-
-### Development
-
-```bash
-npm run dev
-```
-
-### Network Access
-
-```bash
-npm run dev -- --hostname 0.0.0.0
-```
-
-### Build
-
-```bash
-npm run build
-```
+---
 
 ## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── globals.css                 # Tailwind theme, colors, fonts, keyframes
+│   ├── globals.css                  # Tailwind theme, palette, keyframes
+│   ├── api/contact/route.ts         # Contact form API (Resend)
 │   └── [locale]/
-│       ├── layout.tsx              # Root layout with fonts, i18n, CartProvider
-│       ├── page.tsx                # Home page with HomeHero
+│       ├── layout.tsx               # Root layout — fonts, i18n, CartProvider
+│       ├── page.tsx                 # Homepage
 │       ├── shop/
-│       │   ├── page.tsx            # Shop listing with PageHero
+│       │   ├── page.tsx             # All products
 │       │   └── [category]/
-│       │       └── page.tsx        # Dynamic category page
-│       ├── about/
-│       │   └── page.tsx            # About page
-│       └── contacts/
-│           └── page.tsx            # Contacts page
+│       │       ├── page.tsx         # Category page
+│       │       └── [subcategory]/
+│       │           └── page.tsx     # Subcategory page
+│       ├── shop/product/[slug]/
+│       │   └── page.tsx             # Product detail page
+│       ├── about/page.tsx
+│       ├── contacts/page.tsx
+│       ├── privacy/page.tsx
+│       └── terms/page.tsx
 ├── components/
 │   ├── layout/
 │   │   ├── Header/
-│   │   │   ├── Header.tsx          # Main header with sticky scroll behavior
-│   │   │   ├── TopBar.tsx          # Contact bar (hidden on mobile)
-│   │   │   ├── Navigation.tsx      # Desktop nav with mega menu
-│   │   │   ├── MegaMenu.tsx        # Full-width category dropdown
-│   │   │   ├── MobileMenu.tsx      # Premium full-screen mobile menu
-│   │   │   ├── LanguageSwitcher.tsx # LT | EN toggle
-│   │   │   ├── SearchOverlay.tsx   # Search panel with popular tags
-│   │   │   └── CartDrawer.tsx      # Slide-out cart drawer
-│   │   └── index.ts
-│   ├── sections/
-│   │   ├── HomeHero.tsx            # Homepage hero section
-│   │   └── PageHero.tsx            # Reusable inner page hero
-│   └── ui/
-│       └── Breadcrumb.tsx          # Accessible breadcrumb navigation
+│   │   │   ├── HeaderServer.tsx     # Async server component — fetches categories
+│   │   │   ├── Header.tsx           # Client shell — scroll behavior
+│   │   │   ├── Navigation.tsx       # Desktop nav
+│   │   │   ├── MegaMenu.tsx         # Full-width dropdown with category columns
+│   │   │   ├── MobileMenu.tsx       # Accordion mobile menu
+│   │   │   ├── TopBar.tsx           # Contact bar (desktop only)
+│   │   │   ├── SearchOverlay.tsx    # Search panel
+│   │   │   └── CartDrawer.tsx       # Slide-out cart
+│   │   └── Footer/Footer.tsx        # Server component — categories from API
+│   ├── sections/                    # Page sections (Hero, Categories, etc.)
+│   ├── shop/                        # ProductGrid, FilterBar, MobileFilterDrawer
+│   ├── product/                     # Gallery, Info, Selectors, Accordion
+│   ├── contacts/                    # ContactInfo, ContactForm
+│   └── ui/                          # ProductCard, Dropdowns, Breadcrumb, FadeIn
+├── lib/
+│   ├── medusa.ts                    # medusaFetch() helper
+│   └── categories.ts               # getCategories() + MedusaCategory type
 ├── constants/
-│   ├── contact.ts                  # Phone, emails, address, social links
-│   └── categories.ts              # Category slugs and translation key mapping
-├── context/
-│   └── CartContext.tsx             # Cart state management (React Context)
-├── i18n/
-│   ├── request.ts                  # next-intl server config
-│   └── routing.ts                  # Locale routing and navigation helpers
+│   ├── contact.ts                   # Phone, email, address, social, hours
+│   ├── colors.ts                    # Available product colors with hex values
+│   └── placeholderProducts.ts       # 16 placeholder products (pre-Medusa catalog)
+├── context/CartContext.tsx          # Cart state
+├── i18n/routing.ts                  # next-intl routing — exports Link, useRouter
 ├── messages/
-│   ├── lt.json                     # Lithuanian translations
-│   └── en.json                     # English translations
-├── middleware.ts                    # Locale redirect middleware
-└── types/
-    └── index.ts                    # Shared TypeScript types
+│   ├── lt.json
+│   └── en.json
+└── middleware.ts                    # Locale detection and redirect
 ```
 
-## Internationalization
+---
 
-Supported locales: `lt` (default), `en`
+## Getting Started
 
-URL structure: `/lt/...`, `/en/...`
+```bash
+npm install
+```
 
-All user-facing text is served through `next-intl` translation functions — zero hardcoded strings. Translation files are located in `src/messages/`.
+Create `.env.local`:
 
-## Categories
+```env
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=https://api.ezstilius.lt
+NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=your_publishable_key
+RESEND_API_KEY=your_resend_key   # optional — contact form
+```
 
-| Slug | LT | EN |
-|------|----|----|
-| `clothing` | Drabužiai | Clothing |
-| `sewing-supplies` | Priedai rankdarbiams | Craft supplies |
-| `accessories` | Aksesuarai | Accessories |
-| `interior-gifts` | Interjero detalės / Dovanų idėjos | Interior details / Gift ideas |
+```bash
+npm run dev -- -H 0.0.0.0
+```
+
+---
+
+## Color Palette
+
+| Token | Hex | Usage |
+|---|---|---|
+| `cream` | `#FAF8F5` | Background |
+| `charcoal` | `#2D2A26` | Primary text |
+| `olive` | `#8B8424` | Accent, CTAs |
+| `sand` | `#E8E0D4` | Borders, dividers |
+| `warm-gray` | `#8A8478` | Secondary text |
+
+---
+
+## i18n
+
+Default locale is `lt` (no prefix in URL). English is at `/en/...`.
+
+Category names and descriptions are served in the correct language via Medusa's Translation Module — pass `locale=lt-LT` or `locale=en` as a query parameter.
+
+---
+
+## Medusa Integration
+
+Categories are fetched server-side on every request (revalidated every 5 minutes). The frontend reads:
+
+- `/store/product-categories` — navigation, filters, category pages
+- CORS is configured via `STORE_CORS` environment variable on the Medusa server
