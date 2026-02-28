@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Suspense } from 'react';
 import { getTranslations, getLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
