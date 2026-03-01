@@ -313,14 +313,13 @@
   },
   "search": {
     "placeholder": "Search products...",
-    "popularSearches": "Popular searches",
-    "comingSoon": "Search coming soon",
-    "tags": {
-      "scarves": "Scarves",
-      "tablecloths": "Tablecloths",
-      "dresses": "Dresses",
-      "accessories": "Accessories"
-    }
+    "popular": "Popular searches",
+    "noResults": "No products found",
+    "noResultsHint": "Try a different search term",
+    "viewAll": "View all results",
+    "searching": "Searching...",
+    "error": "Search temporarily unavailable",
+    "popularSearches": ["Dresses", "Accessories", "Scarves", "For home", "For kids"]
   },
   "footer": {
     "tagline": "Handmade products with love",

@@ -313,14 +313,13 @@
   },
   "search": {
     "placeholder": "Ieškoti produktų...",
-    "popularSearches": "Populiarios paieškos",
-    "comingSoon": "Paieška netrukus bus prieinama",
-    "tags": {
-      "scarves": "Šalikai",
-      "tablecloths": "Staltiesės",
-      "dresses": "Suknelės",
-      "accessories": "Aksesuarai"
-    }
+    "popular": "Populiarios paieškos",
+    "noResults": "Produktų nerasta",
+    "noResultsHint": "Pabandykite kitą paieškos žodį",
+    "viewAll": "Žiūrėti visus rezultatus",
+    "searching": "Ieškoma...",
+    "error": "Paieška laikinai neveikia",
+    "popularSearches": ["Suknelės", "Aksesuarai", "Šalikai", "Namams", "Vaikams"]
   },
   "footer": {
     "tagline": "Rankų darbo gaminiai su meile",

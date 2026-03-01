@@ -12,7 +12,7 @@ export interface MedusaCategory {
 export async function getCategories(locale: string): Promise<MedusaCategory[]> {
   try {
     const data = await medusaFetch<{ product_categories: MedusaCategory[] }>(
-      `/store/product-categories?include_descendants_tree=true&locale=${locale === 'lt' ? 'lt-LT' : locale}`,
+      `/store/product-categories?include_descendants_tree=true&locale=${locale === 'lt' ? 'lt-LT' : 'en-GB'}`,
       locale,
     );
     return (data.product_categories || []).filter((cat) => !cat.parent_category_id);
