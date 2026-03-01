@@ -6,6 +6,8 @@ import { ChevronDown, X, Check } from 'lucide-react';
 export interface DropdownOption {
   value: string;
   label: string;
+  /** Hex color string or 'multicolor' — triggers a color swatch if provided. */
+  color?: string;
 }
 
 interface MultiSelectDropdownProps {
@@ -16,6 +18,27 @@ interface MultiSelectDropdownProps {
   hasClear: boolean;
   onClear: () => void;
   className?: string;
+}
+
+function ColorSwatch({ color, size = 'md' }: { color: string; size?: 'sm' | 'md' }) {
+  const cls = size === 'sm' ? 'w-3 h-3' : 'w-4 h-4';
+  if (color === 'multicolor') {
+    return (
+      <span
+        className={`${cls} rounded-full shrink-0 border border-black/10`}
+        style={{
+          background:
+            'conic-gradient(red 0deg, orange 51deg, yellow 102deg, green 154deg, cyan 205deg, blue 257deg, violet 308deg, red 360deg)',
+        }}
+      />
+    );
+  }
+  return (
+    <span
+      className={`${cls} rounded-full shrink-0 border border-black/10`}
+      style={{ backgroundColor: color }}
+    />
+  );
 }
 
 export default function MultiSelectDropdown({
@@ -48,6 +71,12 @@ export default function MultiSelectDropdown({
     }
   }
 
+  // Collect swatches for selected options (for trigger button preview)
+  const selectedSwatches = values
+    .slice(0, 3)
+    .map((v) => options.find((o) => o.value === v)?.color)
+    .filter((c): c is string => !!c);
+
   return (
     <div ref={ref} className={`relative ${className}`}>
       <button
@@ -55,6 +84,13 @@ export default function MultiSelectDropdown({
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-2 w-full bg-sand/50 rounded px-4 py-2.5 text-sm text-charcoal hover:bg-sand/70 transition-colors duration-150"
       >
+        {selectedSwatches.length > 0 && (
+          <span className="flex items-center gap-0.5 shrink-0">
+            {selectedSwatches.map((color, i) => (
+              <ColorSwatch key={i} color={color} size="sm" />
+            ))}
+          </span>
+        )}
         <span className="flex-1 text-left truncate">{buttonLabel}</span>
         {hasClear ? (
           <X
@@ -92,7 +128,10 @@ export default function MultiSelectDropdown({
                 >
                   {checked && <Check size={10} className="text-cream" strokeWidth={2.5} />}
                 </span>
-                <span className={`whitespace-nowrap ${checked ? 'text-olive font-medium' : ''}`}>{option.label}</span>
+                {option.color && <ColorSwatch color={option.color} />}
+                <span className={`whitespace-nowrap ${checked ? 'text-olive font-medium' : ''}`}>
+                  {option.label}
+                </span>
               </button>
             );
           })}

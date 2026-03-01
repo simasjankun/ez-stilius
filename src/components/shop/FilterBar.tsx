@@ -7,6 +7,7 @@ import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 import CustomDropdown from '@/components/ui/CustomDropdown';
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer';
 import type { FilterOption } from '@/lib/products';
+import { getSwatchColor } from '@/constants/colorMap';
 
 interface FilterBarProps {
   categories?: string[];
@@ -92,7 +93,7 @@ export default function FilterBar({
                 return (
                   <MultiSelectDropdown
                     key={opt.title}
-                    options={opt.values.map((v) => ({ value: v, label: v }))}
+                    options={opt.values.map((v) => ({ value: v, label: v, color: getSwatchColor(v) ?? undefined }))}
                     values={selected}
                     onChange={(values) => onOptionsChange(opt.title, values)}
                     buttonLabel={btnLabel}

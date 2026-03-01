@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { FilterOption } from '@/lib/products';
+import { getSwatchColor } from '@/constants/colorMap';
 
 interface MobileFilterDrawerProps {
   open: boolean;
@@ -127,6 +128,7 @@ export default function MobileFilterDrawer({
                 </p>
                 {opt.values.map((value) => {
                   const checked = selected.includes(value);
+                  const swatchColor = getSwatchColor(value);
                   return (
                     <button
                       key={value}
@@ -140,6 +142,22 @@ export default function MobileFilterDrawer({
                       className="w-full flex items-center gap-3 py-3 text-sm text-charcoal"
                     >
                       <CheckboxIcon checked={checked} />
+                      {swatchColor && (
+                        swatchColor === 'multicolor' ? (
+                          <span
+                            className="w-4 h-4 rounded-full shrink-0 border border-black/10"
+                            style={{
+                              background:
+                                'conic-gradient(red 0deg, orange 51deg, yellow 102deg, green 154deg, cyan 205deg, blue 257deg, violet 308deg, red 360deg)',
+                            }}
+                          />
+                        ) : (
+                          <span
+                            className="w-4 h-4 rounded-full shrink-0 border border-black/10"
+                            style={{ backgroundColor: swatchColor }}
+                          />
+                        )
+                      )}
                       <span className={checked ? 'text-olive font-medium' : ''}>
                         {value}
                       </span>
