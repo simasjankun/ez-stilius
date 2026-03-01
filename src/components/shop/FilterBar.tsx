@@ -5,20 +5,17 @@ import { useTranslations } from 'next-intl';
 import { SlidersHorizontal, X } from 'lucide-react';
 import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 import CustomDropdown from '@/components/ui/CustomDropdown';
-import ColorDropdown from '@/components/ui/ColorDropdown';
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer';
-
-interface FilterOption {
-  value: string;
-  label: string;
-}
+import type { FilterOption } from '@/lib/products';
 
 interface FilterBarProps {
   categories?: string[];
-  colors: string[];
+  /** Dynamic product options extracted from loaded products (e.g. Spalva, Dydis). */
+  productOptions?: { title: string; values: string[] }[];
+  selectedOptions?: Record<string, string[]>;
   sort: string;
   onCategoriesChange?: (values: string[]) => void;
-  onColorsChange: (values: string[]) => void;
+  onOptionsChange?: (title: string, values: string[]) => void;
   onSortChange: (value: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
@@ -29,10 +26,11 @@ interface FilterBarProps {
 
 export default function FilterBar({
   categories = [],
-  colors,
+  productOptions = [],
+  selectedOptions = {},
   sort,
   onCategoriesChange = () => {},
-  onColorsChange,
+  onOptionsChange = () => {},
   onSortChange,
   onClearFilters,
   hasActiveFilters,
@@ -47,6 +45,7 @@ export default function FilterBar({
     { value: 'newest', label: t('newest') },
     { value: 'price-asc', label: t('priceLow') },
     { value: 'price-desc', label: t('priceHigh') },
+    { value: 'name-az', label: t('nameAZ') },
   ];
 
   function getCategoryLabel(): string {
@@ -60,14 +59,9 @@ export default function FilterBar({
     return t('categoriesCount', { count: categories.length });
   }
 
-  function getColorLabel(): string {
-    if (colors.length === 0) return t('color');
-    if (colors.length === 1) return t(`colors.${colors[0]}`);
-    return `${colors.length} ${t('colorsSelected')}`;
-  }
-
   const activeFilterCount =
-    (showCategoryFilter ? categories.length : 0) + colors.length;
+    (showCategoryFilter ? categories.length : 0) +
+    Object.values(selectedOptions).reduce((sum, v) => sum + v.length, 0);
 
   return (
     <>
@@ -87,14 +81,27 @@ export default function FilterBar({
                   className="min-w-[180px]"
                 />
               )}
-              <ColorDropdown
-                values={colors}
-                onChange={onColorsChange}
-                buttonLabel={getColorLabel()}
-                hasClear={colors.length > 0}
-                onClear={() => onColorsChange([])}
-                className="min-w-[140px]"
-              />
+              {productOptions.map((opt) => {
+                const selected = selectedOptions[opt.title] ?? [];
+                const btnLabel =
+                  selected.length === 0
+                    ? opt.title
+                    : selected.length === 1
+                    ? selected[0]
+                    : `${opt.title} (${selected.length})`;
+                return (
+                  <MultiSelectDropdown
+                    key={opt.title}
+                    options={opt.values.map((v) => ({ value: v, label: v }))}
+                    values={selected}
+                    onChange={(values) => onOptionsChange(opt.title, values)}
+                    buttonLabel={btnLabel}
+                    hasClear={selected.length > 0}
+                    onClear={() => onOptionsChange(opt.title, [])}
+                    className="min-w-[140px]"
+                  />
+                );
+              })}
               <CustomDropdown
                 options={sortOptions}
                 value={sort}
@@ -158,10 +165,11 @@ export default function FilterBar({
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         categories={categories}
-        colors={colors}
+        productOptions={productOptions}
+        selectedOptions={selectedOptions}
         categoryOptions={categoryOptions}
         onCategoriesChange={onCategoriesChange}
-        onColorsChange={onColorsChange}
+        onOptionsChange={onOptionsChange}
         onClear={() => {
           onClearFilters();
           setDrawerOpen(false);

@@ -3,21 +3,17 @@
 import { useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { availableColors } from '@/constants/colors';
-
-interface FilterOption {
-  value: string;
-  label: string;
-}
+import type { FilterOption } from '@/lib/products';
 
 interface MobileFilterDrawerProps {
   open: boolean;
   onClose: () => void;
   categories?: string[];
-  colors: string[];
+  productOptions?: { title: string; values: string[] }[];
+  selectedOptions?: Record<string, string[]>;
   categoryOptions?: FilterOption[];
   onCategoriesChange?: (values: string[]) => void;
-  onColorsChange: (values: string[]) => void;
+  onOptionsChange?: (title: string, values: string[]) => void;
   onClear: () => void;
   resultCount: number;
   showCategoryFilter?: boolean;
@@ -39,16 +35,16 @@ export default function MobileFilterDrawer({
   open,
   onClose,
   categories = [],
-  colors,
+  productOptions = [],
+  selectedOptions = {},
   categoryOptions = [],
   onCategoriesChange = () => {},
-  onColorsChange,
+  onOptionsChange = () => {},
   onClear,
   resultCount,
   showCategoryFilter = true,
 }: MobileFilterDrawerProps) {
   const t = useTranslations('shop.filters');
-  const tc = useTranslations('shop.filters.colors');
 
   useEffect(() => {
     if (open) {
@@ -66,14 +62,6 @@ export default function MobileFilterDrawer({
       onCategoriesChange(categories.filter((v) => v !== value));
     } else {
       onCategoriesChange([...categories, value]);
-    }
-  }
-
-  function toggleColor(key: string) {
-    if (colors.includes(key)) {
-      onColorsChange(colors.filter((v) => v !== key));
-    } else {
-      onColorsChange([...colors, key]);
     }
   }
 
@@ -104,7 +92,7 @@ export default function MobileFilterDrawer({
 
         {/* Scrollable content */}
         <div className="overflow-y-auto flex-1 px-6 pb-4">
-          {/* Categories — hidden on category pages */}
+          {/* Categories */}
           {showCategoryFilter && categoryOptions.length > 0 && (
             <>
               <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">
@@ -120,33 +108,45 @@ export default function MobileFilterDrawer({
                     className="w-full flex items-center gap-3 py-3 text-sm text-charcoal"
                   >
                     <CheckboxIcon checked={checked} />
-                    <span className={checked ? 'text-olive font-medium' : ''}>{option.label}</span>
+                    <span className={checked ? 'text-olive font-medium' : ''}>
+                      {option.label}
+                    </span>
                   </button>
                 );
               })}
             </>
           )}
 
-          {/* Colors */}
-          <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">
-            {t('color')}
-          </p>
-          {availableColors.map((color) => {
-            const checked = colors.includes(color.key);
+          {/* Dynamic product options (Color, Size, Material, etc.) */}
+          {productOptions.map((opt) => {
+            const selected = selectedOptions[opt.title] ?? [];
             return (
-              <button
-                key={color.key}
-                type="button"
-                onClick={() => toggleColor(color.key)}
-                className="w-full flex items-center gap-3 py-3 text-sm text-charcoal"
-              >
-                <CheckboxIcon checked={checked} />
-                <span
-                  className="w-4 h-4 rounded-full shrink-0 border border-black/10"
-                  style={{ backgroundColor: color.hex }}
-                />
-                <span className={checked ? 'text-olive font-medium' : ''}>{tc(color.key)}</span>
-              </button>
+              <div key={opt.title}>
+                <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">
+                  {opt.title}
+                </p>
+                {opt.values.map((value) => {
+                  const checked = selected.includes(value);
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => {
+                        const newVals = checked
+                          ? selected.filter((v) => v !== value)
+                          : [...selected, value];
+                        onOptionsChange(opt.title, newVals);
+                      }}
+                      className="w-full flex items-center gap-3 py-3 text-sm text-charcoal"
+                    >
+                      <CheckboxIcon checked={checked} />
+                      <span className={checked ? 'text-olive font-medium' : ''}>
+                        {value}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             );
           })}
         </div>
