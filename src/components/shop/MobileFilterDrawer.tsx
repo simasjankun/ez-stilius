@@ -156,7 +156,7 @@ export default function MobileFilterDrawer({
           <button
             type="button"
             onClick={onClear}
-            className="text-sm text-warm-gray hover:text-olive transition-colors duration-150"
+            className="cursor-pointer text-sm text-warm-gray hover:text-olive transition-colors duration-150"
           >
             {t('clear')}
           </button>

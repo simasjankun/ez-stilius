@@ -113,7 +113,7 @@ export default function FilterBar({
                 <button
                   type="button"
                   onClick={onClearFilters}
-                  className="flex items-center gap-1.5 text-sm text-warm-gray hover:text-olive transition-colors duration-150"
+                  className="cursor-pointer flex items-center gap-1.5 text-sm text-warm-gray hover:text-olive transition-colors duration-150"
                 >
                   <X size={13} />
                   <span>{t('clearFilters')}</span>
