@@ -6,16 +6,18 @@ import { Link } from '@/i18n/routing';
 
 interface ProductCardProps {
   slug: string;
-  nameKey: string;
+  nameKey?: string;
+  name?: string;
   price: number;
   originalPrice?: number;
   isNew?: boolean;
   image?: string;
 }
 
-export default function ProductCard({ slug, nameKey, price, originalPrice, isNew, image }: ProductCardProps) {
+export default function ProductCard({ slug, nameKey, name, price, originalPrice, isNew, image }: ProductCardProps) {
   const t = useTranslations();
 
+  const displayName = name ?? (nameKey ? t(nameKey) : '');
   const showSaleBadge = !!originalPrice;
   const showNewBadge = isNew && !originalPrice;
 
@@ -25,7 +27,7 @@ export default function ProductCard({ slug, nameKey, price, originalPrice, isNew
         {image ? (
           <img
             src={image}
-            alt={t(nameKey)}
+            alt={displayName}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -50,7 +52,7 @@ export default function ProductCard({ slug, nameKey, price, originalPrice, isNew
       </div>
 
       <h3 className="mt-3 font-serif text-base text-charcoal truncate">
-        {t(nameKey)}
+        {displayName}
       </h3>
 
       {originalPrice ? (

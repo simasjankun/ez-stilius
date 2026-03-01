@@ -4,10 +4,21 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
-import { placeholderProducts } from '@/constants/placeholderProducts';
 import ProductCard from '@/components/ui/ProductCard';
 
-export default function FeaturedProducts() {
+export interface FeaturedProduct {
+  id: string;
+  handle: string;
+  title: string;
+  image: string | undefined;
+  price: number;
+}
+
+interface Props {
+  products: FeaturedProduct[];
+}
+
+export default function FeaturedProducts({ products }: Props) {
   const t = useTranslations('home.featured');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -87,16 +98,17 @@ export default function FeaturedProducts() {
           ref={scrollRef}
           className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4"
         >
-          {placeholderProducts.map((product) => (
+          {products.map((product) => (
             <div
               key={product.id}
               data-card
               className="snap-start shrink-0 w-[70vw] sm:w-[45vw] md:w-[calc(25%-18px)]"
             >
               <ProductCard
-                slug={product.slug}
-                nameKey={product.nameKey}
+                slug={product.handle}
+                name={product.title}
                 price={product.price}
+                image={product.image}
               />
             </div>
           ))}
