@@ -311,7 +311,7 @@ export default function ProductGrid({
                   type="button"
                   onClick={loadMore}
                   disabled={isLoadingMore}
-                  className="border-2 border-olive text-olive text-sm uppercase tracking-widest px-8 py-3 rounded hover:bg-olive hover:text-cream transition-colors duration-200 disabled:opacity-50"
+                  className="cursor-pointer border-2 border-olive text-olive text-sm uppercase tracking-widest px-8 py-3 rounded hover:bg-olive hover:text-cream transition-colors duration-200 disabled:opacity-50 disabled:cursor-default"
                 >
                   {isLoadingMore ? (
                     <span className="flex items-center gap-2">
