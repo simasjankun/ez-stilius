@@ -206,9 +206,9 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
               +
             </button>
           </div>
-          {hasInventoryLimit && typeof rawQty === 'number' && rawQty > 0 && rawQty <= 5 && (
+          {!isUnlimited && typeof inventoryQty === 'number' && inventoryQty > 0 && inventoryQty <= 5 && (
             <p className="text-xs text-warm-gray mt-1.5">
-              {t('product.stockLeft', { count: rawQty })}
+              {t('product.stockLeft', { count: inventoryQty })}
             </p>
           )}
         </div>
