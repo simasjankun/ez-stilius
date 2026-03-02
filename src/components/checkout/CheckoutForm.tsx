@@ -337,30 +337,36 @@ export default function CheckoutForm({ locale }: { locale: string }) {
         }),
       });
       if (!updateRes.ok) throw new Error('connection');
+      const updatedCartData = await updateRes.json();
+      console.log('[checkout] cart updated:', updatedCartData?.cart?.id, 'payment_collection:', updatedCartData?.cart?.payment_collection?.id);
 
-      // 2. Initialize payment collection (Medusa v2)
-      // Try creating a payment collection first; if it fails, proceed directly to complete
-      try {
+      // 2. Initialize payment session (Medusa v2)
+      // Cart may already have a payment_collection; if not, create one.
+      let paymentCollectionId: string | null =
+        updatedCartData?.cart?.payment_collection?.id ?? null;
+
+      if (!paymentCollectionId) {
         const collectionRes = await fetch(`${MEDUSA_URL}/store/payment-collections`, {
           method: 'POST',
           headers: HEADERS,
           body: JSON.stringify({ cart_id: cartId }),
         });
-        if (collectionRes.ok) {
-          const { payment_collection } = await collectionRes.json();
-          if (payment_collection?.id) {
-            await fetch(
-              `${MEDUSA_URL}/store/payment-collections/${payment_collection.id}/payment-sessions`,
-              {
-                method: 'POST',
-                headers: HEADERS,
-                body: JSON.stringify({ provider_id: 'pp_system_default' }),
-              },
-            );
-          }
-        }
-      } catch {
-        // Payment init is optional for system provider — continue to complete
+        const collectionData = await collectionRes.json();
+        console.log('[checkout] payment collection create:', collectionRes.status, collectionData);
+        paymentCollectionId = collectionData?.payment_collection?.id ?? null;
+      }
+
+      if (paymentCollectionId) {
+        const sessionRes = await fetch(
+          `${MEDUSA_URL}/store/payment-collections/${paymentCollectionId}/payment-sessions`,
+          {
+            method: 'POST',
+            headers: HEADERS,
+            body: JSON.stringify({ provider_id: 'pp_system_default' }),
+          },
+        );
+        const sessionData = await sessionRes.json();
+        console.log('[checkout] payment session:', sessionRes.status, sessionData);
       }
 
       // 3. Complete cart
@@ -368,9 +374,10 @@ export default function CheckoutForm({ locale }: { locale: string }) {
         method: 'POST',
         headers: HEADERS,
       });
-      if (!completeRes.ok) throw new Error('generic');
-
       const completeData = await completeRes.json();
+      console.log('[checkout] complete:', completeRes.status, completeData?.type, completeData?.message);
+
+      if (!completeRes.ok) throw new Error('generic');
 
       if (completeData.type === 'order' && completeData.order) {
         const order = completeData.order;
