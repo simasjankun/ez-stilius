@@ -47,7 +47,8 @@ interface CartContextType {
   isDrawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
-  addItem: (variantId: string) => Promise<void>;
+  addItem: (variantId: string, quantity?: number) => Promise<void>;
+  updateItemQuantity: (lineItemId: string, quantity: number) => Promise<void>;
   removeItem: (lineItemId: string) => Promise<void>;
 }
 
@@ -103,21 +104,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
 
   const addItem = useCallback(
-    async (variantId: string) => {
+    async (variantId: string, quantity: number = 1) => {
       setIsLoading(true);
       try {
         const cartId = await ensureCart();
         const res = await fetch(`${MEDUSA_URL}/store/carts/${cartId}/line-items`, {
           method: 'POST',
           headers: HEADERS,
-          body: JSON.stringify({ variant_id: variantId, quantity: 1 }),
+          body: JSON.stringify({ variant_id: variantId, quantity }),
         });
-        if (!res.ok) throw new Error(`Add item failed: ${res.status}`);
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => null);
+          throw new Error(errorData?.message || `Add item failed: ${res.status}`);
+        }
         const data = await res.json();
         setCart(data.cart);
         setIsDrawerOpen(true);
       } catch (e) {
         console.error('Add to cart error:', e);
+        throw e;
       } finally {
         setIsLoading(false);
       }
@@ -125,6 +130,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [regionId],
   );
+
+  const updateItemQuantity = useCallback(async (lineItemId: string, quantity: number) => {
+    const cartId = getCartId();
+    if (!cartId) return;
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${MEDUSA_URL}/store/carts/${cartId}/line-items/${lineItemId}`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({ quantity }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.message || `Update failed: ${res.status}`);
+      }
+      const data = await res.json();
+      setCart(data.cart);
+    } catch (e) {
+      console.error('Update quantity error:', e);
+      const refetchRes = await fetch(`${MEDUSA_URL}/store/carts/${cartId}`, { headers: HEADERS });
+      const refetchData = await refetchRes.json();
+      if (refetchData?.cart) setCart(refetchData.cart);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const removeItem = useCallback(async (lineItemId: string) => {
     const cartId = getCartId();
@@ -169,6 +200,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         openDrawer: () => setIsDrawerOpen(true),
         closeDrawer: () => setIsDrawerOpen(false),
         addItem,
+        updateItemQuantity,
         removeItem,
       }}
     >

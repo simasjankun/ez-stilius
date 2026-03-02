@@ -9,7 +9,7 @@ import { useCart } from '@/context/CartContext';
 
 export default function CartDrawer() {
   const t = useTranslations('cart');
-  const { isDrawerOpen, closeDrawer, items, itemCount, subtotal, removeItem, isLoading } =
+  const { isDrawerOpen, closeDrawer, items, itemCount, subtotal, removeItem, updateItemQuantity, isLoading } =
     useCart();
   const [mounted, setMounted] = useState(false);
 
@@ -127,6 +127,32 @@ export default function CartDrawer() {
                         className="cursor-pointer shrink-0 text-warm-gray hover:text-olive transition-colors disabled:opacity-40"
                       >
                         <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    {/* Quantity controls */}
+                    <div className="flex items-center gap-1 mt-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          item.quantity <= 1
+                            ? removeItem(item.id)
+                            : updateItemQuantity(item.id, item.quantity - 1)
+                        }
+                        disabled={isLoading}
+                        className="w-7 h-7 rounded border border-sand flex items-center justify-center text-xs text-charcoal hover:border-olive disabled:opacity-40 cursor-pointer transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="w-8 text-center text-sm font-medium text-charcoal">
+                        {item.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                        disabled={isLoading}
+                        className="w-7 h-7 rounded border border-sand flex items-center justify-center text-xs text-charcoal hover:border-olive disabled:opacity-40 cursor-pointer transition-colors"
+                      >
+                        +
                       </button>
                     </div>
                   </div>

@@ -184,7 +184,9 @@
     "relatedSubtitle": "REKOMENDUOJAME",
     "relatedTitle": "Jums gali patikti",
     "adding": "DEDAMA...",
-    "soldOut": "IŠPARDUOTA"
+    "soldOut": "IŠPARDUOTA",
+    "stockLeft": "Liko tik {count}",
+    "addError": "Nepavyko pridėti į krepšelį. Bandykite dar kartą."
   },
   "shop": {
     "title": "Parduotuvė",

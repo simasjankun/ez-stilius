@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useCart } from '@/context/CartContext';
@@ -25,6 +25,9 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
     );
   });
 
+  const [quantity, setQuantity] = useState(1);
+  const [addError, setAddError] = useState<string | null>(null);
+
   // Find the variant that matches current selection
   const selectedVariant =
     (product.variants ?? []).find((variant: any) =>
@@ -32,6 +35,18 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
         (opt: any) => selectedOptions[opt.option_id] === opt.value,
       ),
     ) ?? firstVariant ?? null;
+
+  // Inventory logic
+  const hasInventoryLimit = selectedVariant?.manage_inventory !== false;
+  const maxQuantity: number = selectedVariant?.inventory_quantity ?? 10;
+  const effectiveMax = hasInventoryLimit ? Math.min(maxQuantity, 99) : 99;
+  const isSoldOut = hasInventoryLimit && maxQuantity === 0;
+
+  // Reset quantity to 1 when selected variant changes
+  useEffect(() => {
+    setQuantity(1);
+    setAddError(null);
+  }, [selectedVariant?.id]);
 
   // Compute whether variants span a price range
   const allPrices: number[] = (product.variants ?? []).flatMap((v: any) => {
@@ -41,9 +56,6 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
       v.prices?.find((p: any) => p.currency_code === 'eur') || v.prices?.[0];
     return eurPrice ? [Number(eurPrice.amount)] : [];
   });
-  const isRange =
-    allPrices.length > 1 &&
-    Math.min(...allPrices) !== Math.max(...allPrices);
 
   // Price for the currently selected variant
   let currentPrice: number | null = null;
@@ -63,12 +75,20 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
     }
   }
 
-  // Show "Nuo" prefix only if range and no specific variant selected yet
-  // (auto-initialised with first variant, so we always have a selection — show exact price)
   const displayPrice = currentPrice ?? (allPrices.length ? Math.min(...allPrices) : null);
 
   function handleOptionSelect(optionId: string, value: string) {
     setSelectedOptions((prev) => ({ ...prev, [optionId]: value }));
+  }
+
+  async function handleAddToCart() {
+    if (!selectedVariant) return;
+    setAddError(null);
+    try {
+      await addItem(selectedVariant.id, quantity);
+    } catch {
+      setAddError(t('product.addError'));
+    }
   }
 
   const productOptions: any[] = product.options ?? [];
@@ -150,16 +170,64 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
         </div>
       )}
 
-      {/* Add to cart */}
-      <button
-        type="button"
-        disabled={!selectedVariant || isLoading}
-        onClick={() => selectedVariant && addItem(selectedVariant.id)}
-        className="mt-8 w-full flex items-center justify-center gap-3 bg-olive text-cream py-4 text-sm uppercase tracking-widest font-medium rounded cursor-pointer hover:bg-olive-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-default"
-      >
-        <ShoppingBag size={18} />
-        {isLoading ? t('product.adding') : t('product.addToCart')}
-      </button>
+      {/* Quantity selector */}
+      {!isSoldOut && (
+        <div className="mt-6">
+          <div className="flex items-center gap-1">
+            <span className="text-sm font-medium text-charcoal mr-3">{t('product.quantity')}:</span>
+            <button
+              type="button"
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              disabled={quantity <= 1}
+              className="w-10 h-10 rounded-lg border border-sand flex items-center justify-center text-charcoal hover:border-olive disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            >
+              −
+            </button>
+            <span className="w-12 h-10 flex items-center justify-center text-sm font-medium text-charcoal">
+              {quantity}
+            </span>
+            <button
+              type="button"
+              onClick={() => setQuantity((q) => Math.min(effectiveMax, q + 1))}
+              disabled={quantity >= effectiveMax}
+              className="w-10 h-10 rounded-lg border border-sand flex items-center justify-center text-charcoal hover:border-olive disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+            >
+              +
+            </button>
+          </div>
+          {hasInventoryLimit && maxQuantity <= 5 && maxQuantity > 0 && (
+            <p className="text-xs text-warm-gray mt-1.5">
+              {t('product.stockLeft', { count: maxQuantity })}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Add to cart / Sold out */}
+      {isSoldOut ? (
+        <button
+          type="button"
+          disabled
+          className="mt-8 w-full flex items-center justify-center gap-3 bg-sand text-warm-gray py-4 text-sm uppercase tracking-widest font-medium rounded cursor-default opacity-70"
+        >
+          {t('product.soldOut')}
+        </button>
+      ) : (
+        <button
+          type="button"
+          disabled={!selectedVariant || isLoading}
+          onClick={handleAddToCart}
+          className="mt-8 w-full flex items-center justify-center gap-3 bg-olive text-cream py-4 text-sm uppercase tracking-widest font-medium rounded cursor-pointer hover:bg-olive-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-default"
+        >
+          <ShoppingBag size={18} />
+          {isLoading ? t('product.adding') : t('product.addToCart')}
+        </button>
+      )}
+
+      {/* Add to cart error */}
+      {addError && (
+        <p className="text-xs text-red-600 mt-2 text-center">{addError}</p>
+      )}
     </div>
   );
 }

@@ -190,7 +190,7 @@ export async function fetchProductByHandle(
 ): Promise<any | null> {
   const medusaLocale = getMedusaLocale(locale);
   // +images,+categories.id,+categories.name,+categories.handle,+options.values,+variants.options
-  let url = `${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}&locale=${medusaLocale}&fields=%2Bimages%2C%2Bcategories.id%2C%2Bcategories.name%2C%2Bcategories.handle%2C%2Boptions.values%2C%2Bvariants.options`;
+  let url = `${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}&locale=${medusaLocale}&fields=%2Bimages%2C%2Bcategories.id%2C%2Bcategories.name%2C%2Bcategories.handle%2C%2Boptions.values%2C%2Bvariants.options%2C%2Bvariants.inventory_quantity%2C%2Bvariants.manage_inventory`;
   if (regionId) url += `&region_id=${regionId}`;
 
   try {

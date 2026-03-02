@@ -184,7 +184,9 @@
     "relatedSubtitle": "RECOMMENDED",
     "relatedTitle": "You may also like",
     "adding": "ADDING...",
-    "soldOut": "SOLD OUT"
+    "soldOut": "SOLD OUT",
+    "stockLeft": "Only {count} left",
+    "addError": "Could not add to cart. Please try again."
   },
   "shop": {
     "title": "Shop",
