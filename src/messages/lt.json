@@ -178,11 +178,16 @@
     "addToCart": "Į krepšelį",
     "description": "Aprašymas",
     "materialCare": "Medžiaga ir priežiūra",
-    "relatedProducts": "Panašūs gaminiai"
+    "relatedProducts": "Panašūs gaminiai",
+    "readMore": "Skaityti daugiau",
+    "readLess": "Rodyti mažiau",
+    "relatedSubtitle": "REKOMENDUOJAME",
+    "relatedTitle": "Jums gali patikti"
   },
   "shop": {
     "title": "Parduotuvė",
     "subtitle": "Visi rankų darbo gaminiai",
+    "from": "Nuo",
     "filters": {
       "allCategories": "Visos kategorijos",
       "sortBy": "Rūšiuoti pagal",

@@ -10,7 +10,7 @@ import EmptyState from '@/components/shop/EmptyState';
 import {
   BATCH_SIZE,
   fetchProducts,
-  getProductPrice,
+  getProductPriceDisplay,
   getProductImage,
   extractProductOptions,
   applyOptionFilters,
@@ -240,8 +240,8 @@ export default function ProductGrid({
     const filtered = applyOptionFilters(source, selectedOptions);
     if (!isPriceSort) return filtered;
     return [...filtered].sort((a, b) => {
-      const pa = getProductPrice(a).amount ?? (sort === 'price-asc' ? Infinity : -Infinity);
-      const pb = getProductPrice(b).amount ?? (sort === 'price-asc' ? Infinity : -Infinity);
+      const pa = getProductPriceDisplay(a).minPrice ?? (sort === 'price-asc' ? Infinity : -Infinity);
+      const pb = getProductPriceDisplay(b).minPrice ?? (sort === 'price-asc' ? Infinity : -Infinity);
       return sort === 'price-asc' ? pa - pb : pb - pa;
     });
   }, [isClientSideMode, isPriceSort, allProducts, products, selectedOptions, sort]);
@@ -293,7 +293,7 @@ export default function ProductGrid({
           <>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {displayedProducts.map((product) => {
-                const { amount, compareAtAmount } = getProductPrice(product);
+                const { minPrice, compareAtPrice, isRange } = getProductPriceDisplay(product);
                 const image = getProductImage(product);
                 const isNew =
                   new Date(product.created_at) >
@@ -303,9 +303,10 @@ export default function ProductGrid({
                     key={product.id}
                     slug={product.handle}
                     name={product.title}
-                    price={amount ?? 0}
-                    originalPrice={compareAtAmount ?? undefined}
+                    price={minPrice ?? 0}
+                    originalPrice={compareAtPrice ?? undefined}
                     isNew={isNew}
+                    isRange={isRange}
                     image={image ?? undefined}
                   />
                 );

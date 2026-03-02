@@ -178,11 +178,16 @@
     "addToCart": "Add to cart",
     "description": "Description",
     "materialCare": "Material & Care",
-    "relatedProducts": "Related products"
+    "relatedProducts": "Related products",
+    "readMore": "Read more",
+    "readLess": "Read less",
+    "relatedSubtitle": "RECOMMENDED",
+    "relatedTitle": "You may also like"
   },
   "shop": {
     "title": "Shop",
     "subtitle": "All handmade products",
+    "from": "From",
     "filters": {
       "allCategories": "All categories",
       "sortBy": "Sort by",

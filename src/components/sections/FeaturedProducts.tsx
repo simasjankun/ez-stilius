@@ -12,6 +12,7 @@ export interface FeaturedProduct {
   title: string;
   image: string | undefined;
   price: number;
+  isRange: boolean;
 }
 
 interface Props {
@@ -108,6 +109,7 @@ export default function FeaturedProducts({ products }: Props) {
                 slug={product.handle}
                 name={product.title}
                 price={product.price}
+                isRange={product.isRange}
                 image={product.image}
               />
             </div>

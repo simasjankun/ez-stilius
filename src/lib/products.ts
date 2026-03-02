@@ -76,6 +76,49 @@ export async function fetchProducts(options: {
   }
 }
 
+/**
+ * Compute price display data across ALL variants of a product.
+ * Returns the minimum price, whether there's a price range, and an optional compare-at price.
+ */
+export function getProductPriceDisplay(product: any): {
+  minPrice: number | null;
+  compareAtPrice: number | null;
+  isRange: boolean;
+} {
+  const variants: any[] = product.variants ?? [];
+  if (!variants.length) return { minPrice: null, compareAtPrice: null, isRange: false };
+
+  const prices: number[] = [];
+  let lowestCompareAt: number | null = null;
+
+  for (const variant of variants) {
+    let amount: number | null = null;
+    let origAmount: number | null = null;
+
+    if (variant.calculated_price?.calculated_amount != null) {
+      amount = Number(variant.calculated_price.calculated_amount);
+      const orig = variant.calculated_price.original_amount;
+      if (orig != null && Number(orig) !== amount) origAmount = Number(orig);
+    } else {
+      const eurPrice =
+        variant.prices?.find((p: any) => p.currency_code === 'eur') ||
+        variant.prices?.[0];
+      if (eurPrice) amount = Number(eurPrice.amount);
+    }
+
+    if (amount != null) prices.push(amount);
+    if (origAmount != null && (lowestCompareAt === null || origAmount < lowestCompareAt)) {
+      lowestCompareAt = origAmount;
+    }
+  }
+
+  if (!prices.length) return { minPrice: null, compareAtPrice: null, isRange: false };
+
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  return { minPrice, compareAtPrice: lowestCompareAt, isRange: minPrice !== maxPrice };
+}
+
 export function getProductPrice(product: any): {
   amount: number | null;
   compareAtAmount: number | null;
@@ -134,6 +177,33 @@ export function extractProductOptions(
     title,
     values: Array.from(values),
   }));
+}
+
+/**
+ * Fetch a single product by handle (slug) from Medusa API.
+ * Requests images, categories, and option data upfront for all product page steps.
+ */
+export async function fetchProductByHandle(
+  handle: string,
+  locale: string,
+  regionId?: string | null,
+): Promise<any | null> {
+  const medusaLocale = getMedusaLocale(locale);
+  // +images,+categories.id,+categories.name,+categories.handle,+options.values,+variants.options
+  let url = `${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}&locale=${medusaLocale}&fields=%2Bimages%2C%2Bcategories.id%2C%2Bcategories.name%2C%2Bcategories.handle%2C%2Boptions.values%2C%2Bvariants.options`;
+  if (regionId) url += `&region_id=${regionId}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: getMedusaHeaders(locale),
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.products?.[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /**

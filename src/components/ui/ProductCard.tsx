@@ -11,10 +11,11 @@ interface ProductCardProps {
   price: number;
   originalPrice?: number;
   isNew?: boolean;
+  isRange?: boolean;
   image?: string;
 }
 
-export default function ProductCard({ slug, nameKey, name, price, originalPrice, isNew, image }: ProductCardProps) {
+export default function ProductCard({ slug, nameKey, name, price, originalPrice, isNew, isRange, image }: ProductCardProps) {
   const t = useTranslations();
 
   const displayName = name ?? (nameKey ? t(nameKey) : '');
@@ -58,10 +59,14 @@ export default function ProductCard({ slug, nameKey, name, price, originalPrice,
       {originalPrice ? (
         <p className="mt-1 text-sm">
           <span className="line-through text-warm-gray mr-2">€{originalPrice.toFixed(2)}</span>
-          <span className="font-medium text-olive">€{price.toFixed(2)}</span>
+          <span className="font-medium text-olive">
+            {isRange ? `${t('shop.from')} ` : ''}€{price.toFixed(2)}
+          </span>
         </p>
       ) : (
-        <p className="mt-1 text-sm font-medium text-olive">€{price.toFixed(2)}</p>
+        <p className="mt-1 text-sm font-medium text-olive">
+          {isRange ? `${t('shop.from')} ` : ''}€{price.toFixed(2)}
+        </p>
       )}
     </Link>
   );
