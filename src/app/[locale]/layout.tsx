@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { use } from 'react';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
