@@ -44,16 +44,6 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
   const allowBackorder = selectedVariant?.allow_backorder;
   const inventoryQty = selectedVariant?.inventory_quantity as number | null | undefined;
 
-  // Debug: log actual values from Medusa (remove once confirmed working)
-  if (process.env.NODE_ENV !== 'production' && selectedVariant) {
-    console.log('[EŽ inventory]', {
-      variantId: selectedVariant.id,
-      manage_inventory: manageInventory,
-      allow_backorder: allowBackorder,
-      inventory_quantity: inventoryQty,
-    });
-  }
-
   const isUnlimited = manageInventory === false || allowBackorder === true;
   // null === 0 is false in JS, so null inventory_quantity never triggers sold-out
   const isSoldOut = !isUnlimited && inventoryQty === 0;
