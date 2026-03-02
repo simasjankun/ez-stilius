@@ -59,15 +59,15 @@ export default function ProductGrid({
 
   const initSort = searchParams.get('sort') ?? '';
 
-  // API-paginated products (for newest / name-az)
+  // API-paginated products (for newest / name-az without option filters)
   const [products, setProducts] = useState<any[]>(initialProducts);
   const [count, setCount] = useState(initialCount);
 
-  // Full product list fetched at once for price sorts
+  // Full product list — always fetched on mount; used for option extraction + client-side filtering
   const [allProducts, setAllProducts] = useState<any[]>([]);
   const [clientOffset, setClientOffset] = useState(BATCH_SIZE);
 
-  // If URL already has price sort on mount → start in loading state
+  // Show full-page spinner for foreground fetches (price sort switch)
   const [isFetching, setIsFetching] = useState(isPriceSortValue(initSort));
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -78,18 +78,22 @@ export default function ProductGrid({
   const [sort, setSort] = useState(initSort);
 
   const isPriceSort = isPriceSortValue(sort);
+  const hasActiveOptionFilters = Object.values(selectedOptions).some((v) => v.length > 0);
+  // Use client-side pagination when price sort OR option filters are active
+  const isClientSideMode = isPriceSort || hasActiveOptionFilters;
 
-  // On mount: if URL already has price sort, fetch full catalog immediately
+  // On mount: always fetch full catalog for option extraction + client-side filtering
   useEffect(() => {
+    const initCats = lockedCategory ? [] : parseParam(searchParams.get('category'));
     if (isPriceSortValue(initSort)) {
-      const initCats = lockedCategory ? [] : parseParam(searchParams.get('category'));
       applyPriceSort(initCats);
+    } else {
+      fetchFullCatalog(initCats);
     }
-    // runs once on mount — stable props used inside
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ─── URL helpers ────────────────────────────────────────────────────────────
+  // ─── URL helpers ─────────────────────────────────────────────────────────────
 
   function updateUrl(nextCategories: string[], nextSort: string) {
     const params = new URLSearchParams();
@@ -113,7 +117,19 @@ export default function ProductGrid({
     return ids.length ? ids : undefined;
   }
 
-  // ─── Data fetching ──────────────────────────────────────────────────────────
+  // ─── Data fetching ───────────────────────────────────────────────────────────
+
+  /** Silently fetch all products (up to 200) for option extraction + client-side filtering. */
+  async function fetchFullCatalog(cats: string[]) {
+    const { products: all } = await fetchProducts({
+      locale,
+      regionId,
+      categoryIds: getCategoryIds(cats),
+      limit: 200,
+      offset: 0,
+    });
+    setAllProducts(all);
+  }
 
   /** Fetch paginated products for newest / name-az sorts (normal API pagination). */
   async function applyFilters(newCategories: string[], newSort: string) {
@@ -131,22 +147,11 @@ export default function ProductGrid({
     setIsFetching(false);
   }
 
-  /**
-   * Fetch ALL products (limit 200) for price sorts so that sorting covers
-   * the entire catalog, not just the currently loaded page.
-   */
+  /** Fetch ALL products for price sort — foreground (shows full-page spinner). */
   async function applyPriceSort(cats: string[]) {
     setIsFetching(true);
-    setAllProducts([]);
     setClientOffset(BATCH_SIZE);
-    const { products: all } = await fetchProducts({
-      locale,
-      regionId,
-      categoryIds: getCategoryIds(cats),
-      limit: 200,
-      offset: 0,
-    });
-    setAllProducts(all);
+    await fetchFullCatalog(cats);
     setIsFetching(false);
   }
 
@@ -155,49 +160,49 @@ export default function ProductGrid({
   function handleCategoriesChange(values: string[]) {
     setCategories(values);
     setSelectedOptions({});
+    setClientOffset(BATCH_SIZE);
     updateUrl(values, sort);
     if (isPriceSort) {
       applyPriceSort(values);
     } else {
       applyFilters(values, sort);
+      fetchFullCatalog(values);
     }
   }
 
   function handleSortChange(value: string) {
     setSort(value);
+    setClientOffset(BATCH_SIZE);
     updateUrl(categories, value);
 
     if (isPriceSortValue(value)) {
-      // Switching to price sort: fetch full catalog once, paginate client-side
       applyPriceSort(categories);
     } else if (isPriceSort) {
-      // Switching away from price sort: back to normal API pagination
-      setAllProducts([]);
+      // Switching away from price sort → back to API pagination
+      // allProducts stays populated for option extraction
       applyFilters(categories, value);
     } else if (sortToApiOrder(value) !== sortToApiOrder(sort)) {
-      // Switching between API-ordered sorts
       applyFilters(categories, value);
     }
   }
 
   function handleOptionsChange(optionTitle: string, values: string[]) {
     setSelectedOptions((prev) => ({ ...prev, [optionTitle]: values }));
-    // Reset visible slice so newly filtered products start from the top
-    if (isPriceSort) setClientOffset(BATCH_SIZE);
+    setClientOffset(BATCH_SIZE);
   }
 
   function handleClearFilters() {
     if (!lockedCategory) setCategories([]);
     setSelectedOptions({});
     setSort('');
-    setAllProducts([]);
     setClientOffset(BATCH_SIZE);
     router.push(pathname as '/shop', { scroll: false });
     applyFilters([], '');
+    fetchFullCatalog([]);
   }
 
   async function loadMore() {
-    if (isPriceSort) {
+    if (isClientSideMode) {
       // No API call needed — just reveal the next slice of already-fetched data
       setClientOffset((prev) => prev + BATCH_SIZE);
       return;
@@ -216,47 +221,49 @@ export default function ProductGrid({
     setIsLoadingMore(false);
   }
 
-  // ─── Derived data ────────────────────────────────────────────────────────────
+  // ─── Derived data ─────────────────────────────────────────────────────────────
 
-  // Extract available filter options from whichever product set is in use
+  // Extract options from full catalog when available; fall back to loaded batch
   const productOptions = useMemo(
-    () => extractProductOptions(isPriceSort ? allProducts : products),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isPriceSort, allProducts, products],
+    () => extractProductOptions(allProducts.length > 0 ? allProducts : products),
+    [allProducts, products],
   );
 
   /**
-   * For price sorts: sort the FULL catalog client-side, then slice for display.
-   * For other sorts: apply option filters only (API handles ordering).
+   * For client-side mode (price sort OR option filters):
+   * filter from full catalog, sort by price if needed.
+   * Falls back to filtering `products` if allProducts not yet loaded.
    */
-  const sortedAllProducts = useMemo(() => {
-    if (!isPriceSort) return [];
-    const filtered = applyOptionFilters(allProducts, selectedOptions);
+  const clientFilteredProducts = useMemo(() => {
+    if (!isClientSideMode) return [];
+    const source = allProducts.length > 0 ? allProducts : products;
+    const filtered = applyOptionFilters(source, selectedOptions);
+    if (!isPriceSort) return filtered;
     return [...filtered].sort((a, b) => {
       const pa = getProductPrice(a).amount ?? (sort === 'price-asc' ? Infinity : -Infinity);
       const pb = getProductPrice(b).amount ?? (sort === 'price-asc' ? Infinity : -Infinity);
       return sort === 'price-asc' ? pa - pb : pb - pa;
     });
-  }, [isPriceSort, allProducts, selectedOptions, sort]);
+  }, [isClientSideMode, isPriceSort, allProducts, products, selectedOptions, sort]);
 
   const displayedProducts = useMemo(() => {
-    if (isPriceSort) return sortedAllProducts.slice(0, clientOffset);
-    return applyOptionFilters(products, selectedOptions);
-  }, [isPriceSort, sortedAllProducts, clientOffset, products, selectedOptions]);
+    if (isClientSideMode) return clientFilteredProducts.slice(0, clientOffset);
+    return products;
+  }, [isClientSideMode, clientFilteredProducts, clientOffset, products]);
 
-  // Total count for the "Rasta: X" label
-  const resultCount = isPriceSort ? sortedAllProducts.length : displayedProducts.length;
+  // Total count for "Rasta: X" label
+  const resultCount = isClientSideMode ? clientFilteredProducts.length : count;
 
-  const hasMore = isPriceSort
-    ? clientOffset < sortedAllProducts.length
+  const hasMore = isClientSideMode
+    ? clientOffset < clientFilteredProducts.length
     : products.length < count;
 
   const hasActiveFilters =
     (!lockedCategory && categories.length > 0) ||
-    Object.values(selectedOptions).some((v) => v.length > 0) ||
+    hasActiveOptionFilters ||
     !!sort;
 
-  // ─── Render ──────────────────────────────────────────────────────────────────
+  // ─── Render ───────────────────────────────────────────────────────────────────
 
   return (
     <>

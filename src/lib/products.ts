@@ -51,7 +51,9 @@ export async function fetchProducts(options: {
   const { locale, regionId, categoryIds, limit = BATCH_SIZE, offset = 0, order } = options;
   const medusaLocale = getMedusaLocale(locale);
 
-  let url = `${MEDUSA_URL}/store/products?limit=${limit}&offset=${offset}&locale=${medusaLocale}`;
+  // +options.values → available option values per product (e.g. Color: Yellow)
+  // +variants.options → which option value each variant has selected
+  let url = `${MEDUSA_URL}/store/products?limit=${limit}&offset=${offset}&locale=${medusaLocale}&fields=%2Boptions.values%2C%2Bvariants.options`;
   if (regionId) url += `&region_id=${regionId}`;
   if (order) url += `&order=${encodeURIComponent(order)}`;
   if (categoryIds?.length) {
