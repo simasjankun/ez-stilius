@@ -1,45 +1,178 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+
+const MEDUSA_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'https://api.ezstilius.lt';
+const API_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || '';
+const HEADERS = {
+  'x-publishable-api-key': API_KEY,
+  'Content-Type': 'application/json',
+};
+
+function getMedusaLocale(): string {
+  if (typeof document === 'undefined') return 'lt-LT';
+  const lang = document.documentElement.lang;
+  return lang === 'en' ? 'en-GB' : 'lt-LT';
+}
+
+function getCartId(): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(/(?:^|; )cart_id=([^;]*)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function setCartId(id: string) {
+  document.cookie = `cart_id=${encodeURIComponent(id)};path=/;max-age=${60 * 60 * 24 * 30};SameSite=Lax`;
+}
+
+function clearCartId() {
+  document.cookie = 'cart_id=;path=/;max-age=0';
+}
 
 export interface CartItem {
   id: string;
-  name: string;
-  price: number;
+  title: string;
+  variant_title: string | null;
+  thumbnail: string | null;
   quantity: number;
-  image?: string;
+  unit_price: number;
+  total: number;
 }
 
-interface CartContextValue {
-  isCartOpen: boolean;
-  openCart: () => void;
-  closeCart: () => void;
-  cartItems: CartItem[];
-  cartCount: number;
+interface CartContextType {
+  items: CartItem[];
+  itemCount: number;
+  subtotal: number;
+  isLoading: boolean;
+  isDrawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  addItem: (variantId: string) => Promise<void>;
+  removeItem: (lineItemId: string) => Promise<void>;
 }
 
-const CartContext = createContext<CartContextValue | null>(null);
+const CartContext = createContext<CartContextType | null>(null);
+
+export function useCart() {
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error('useCart must be used inside CartProvider');
+  return ctx;
+}
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [regionId, setRegionId] = useState<string | null>(null);
 
-  const openCart = useCallback(() => setIsCartOpen(true), []);
-  const closeCart = useCallback(() => setIsCartOpen(false), []);
+  // Fetch region ID once on mount
+  useEffect(() => {
+    fetch(`${MEDUSA_URL}/store/regions`, { headers: HEADERS })
+      .then((res) => res.json())
+      .then((data) => setRegionId(data.regions?.[0]?.id ?? null))
+      .catch(() => {});
+  }, []);
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  // Load existing cart on mount
+  useEffect(() => {
+    const cartId = getCartId();
+    if (!cartId) return;
+    fetch(`${MEDUSA_URL}/store/carts/${cartId}`, { headers: HEADERS })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.cart) setCart(data.cart);
+        else clearCartId();
+      })
+      .catch(() => {});
+  }, []);
+
+  async function ensureCart(): Promise<string> {
+    const existing = getCartId();
+    if (existing) return existing;
+
+    const res = await fetch(`${MEDUSA_URL}/store/carts`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify({ region_id: regionId, locale: getMedusaLocale() }),
+    });
+    const data = await res.json();
+    const newCartId = data.cart.id;
+    setCartId(newCartId);
+    setCart(data.cart);
+    return newCartId;
+  }
+
+  const addItem = useCallback(
+    async (variantId: string) => {
+      setIsLoading(true);
+      try {
+        const cartId = await ensureCart();
+        const res = await fetch(`${MEDUSA_URL}/store/carts/${cartId}/line-items`, {
+          method: 'POST',
+          headers: HEADERS,
+          body: JSON.stringify({ variant_id: variantId, quantity: 1 }),
+        });
+        if (!res.ok) throw new Error(`Add item failed: ${res.status}`);
+        const data = await res.json();
+        setCart(data.cart);
+        setIsDrawerOpen(true);
+      } catch (e) {
+        console.error('Add to cart error:', e);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [regionId],
+  );
+
+  const removeItem = useCallback(async (lineItemId: string) => {
+    const cartId = getCartId();
+    if (!cartId) return;
+    setIsLoading(true);
+    try {
+      const res = await fetch(
+        `${MEDUSA_URL}/store/carts/${cartId}/line-items/${lineItemId}`,
+        { method: 'DELETE', headers: HEADERS },
+      );
+      if (!res.ok) throw new Error(`Remove item failed: ${res.status}`);
+      const data = await res.json();
+      setCart(data.parent); // DELETE returns cart in "parent" field
+    } catch (e) {
+      console.error('Remove from cart error:', e);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const items: CartItem[] = (cart?.items ?? []).map((item: any) => ({
+    id: item.id,
+    title: item.product_title || item.title || '',
+    variant_title: item.variant_title ?? null,
+    thumbnail: item.thumbnail ?? null,
+    quantity: item.quantity,
+    unit_price: Number(item.unit_price),
+    total: Number(item.total ?? item.unit_price * item.quantity),
+  }));
+
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = Number(cart?.total ?? cart?.subtotal ?? 0);
 
   return (
-    <CartContext.Provider value={{ isCartOpen, openCart, closeCart, cartItems, cartCount }}>
+    <CartContext.Provider
+      value={{
+        items,
+        itemCount,
+        subtotal,
+        isLoading,
+        isDrawerOpen,
+        openDrawer: () => setIsDrawerOpen(true),
+        closeDrawer: () => setIsDrawerOpen(false),
+        addItem,
+        removeItem,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
-}
-
-export function useCart() {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
 }

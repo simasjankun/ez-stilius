@@ -19,7 +19,7 @@ export default function ProductInfo({ product, categoryName }: ProductInfoProps)
   const t = useTranslations();
   const tp = useTranslations('product');
   const tc = useTranslations('shop.filters.colors');
-  const { openCart } = useCart();
+  const { openDrawer } = useCart();
 
   const [selectedColor, setSelectedColor] = useState<string | null>(
     product.colors?.[0] ?? null
@@ -121,7 +121,7 @@ export default function ProductInfo({ product, categoryName }: ProductInfoProps)
       {/* Add to cart */}
       <button
         type="button"
-        onClick={openCart}
+        onClick={openDrawer}
         className="w-full flex items-center justify-center gap-3 bg-olive text-cream py-4 text-sm uppercase tracking-widest font-medium rounded cursor-pointer hover:bg-olive-dark transition-colors duration-200"
       >
         <ShoppingBag size={18} />

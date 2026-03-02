@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useCart } from '@/context/CartContext';
 import ProductDescription from './ProductDescription';
 
 interface ProductPurchaseSectionProps {
@@ -11,6 +12,7 @@ interface ProductPurchaseSectionProps {
 
 export default function ProductPurchaseSection({ product }: ProductPurchaseSectionProps) {
   const t = useTranslations();
+  const { addItem, isLoading } = useCart();
 
   // Initialize selected options from first variant
   const firstVariant = product.variants?.[0];
@@ -149,11 +151,12 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
       {/* Add to cart */}
       <button
         type="button"
-        disabled={!selectedVariant}
+        disabled={!selectedVariant || isLoading}
+        onClick={() => selectedVariant && addItem(selectedVariant.id)}
         className="mt-8 w-full flex items-center justify-center gap-3 bg-olive text-cream py-4 text-sm uppercase tracking-widest font-medium rounded cursor-pointer hover:bg-olive-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-default"
       >
         <ShoppingBag size={18} />
-        {t('product.addToCart')}
+        {isLoading ? t('product.adding') : t('product.addToCart')}
       </button>
     </div>
   );

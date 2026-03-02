@@ -182,7 +182,9 @@
     "readMore": "Read more",
     "readLess": "Read less",
     "relatedSubtitle": "RECOMMENDED",
-    "relatedTitle": "You may also like"
+    "relatedTitle": "You may also like",
+    "adding": "ADDING...",
+    "soldOut": "SOLD OUT"
   },
   "shop": {
     "title": "Shop",
@@ -315,7 +317,8 @@
     "continueShopping": "Continue shopping",
     "total": "Total",
     "quantity": "Quantity",
-    "remove": "Remove"
+    "remove": "Remove",
+    "checkoutSoon": "Checkout coming soon"
   },
   "search": {
     "placeholder": "Search products...",

@@ -15,7 +15,7 @@ interface NavigationProps {
 
 export default function Navigation({ categories }: NavigationProps) {
   const t = useTranslations('header');
-  const { openCart, cartCount } = useCart();
+  const { openDrawer, itemCount } = useCart();
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -89,14 +89,14 @@ export default function Navigation({ categories }: NavigationProps) {
           <Search className="h-5 w-5" />
         </button>
         <button
-          onClick={openCart}
+          onClick={openDrawer}
           className="relative cursor-pointer text-charcoal hover:text-olive transition-colors p-1"
           aria-label={t('cart')}
         >
           <ShoppingBag className="h-5 w-5" />
-          {cartCount > 0 && (
+          {itemCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
-              {cartCount}
+              {itemCount}
             </span>
           )}
         </button>

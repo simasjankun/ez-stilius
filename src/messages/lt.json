@@ -182,7 +182,9 @@
     "readMore": "Skaityti daugiau",
     "readLess": "Rodyti mažiau",
     "relatedSubtitle": "REKOMENDUOJAME",
-    "relatedTitle": "Jums gali patikti"
+    "relatedTitle": "Jums gali patikti",
+    "adding": "DEDAMA...",
+    "soldOut": "IŠPARDUOTA"
   },
   "shop": {
     "title": "Parduotuvė",
@@ -315,7 +317,8 @@
     "continueShopping": "Tęsti apsipirkimą",
     "total": "Suma",
     "quantity": "Kiekis",
-    "remove": "Pašalinti"
+    "remove": "Pašalinti",
+    "checkoutSoon": "Apmokėjimas ruošiamas"
   },
   "search": {
     "placeholder": "Ieškoti produktų...",

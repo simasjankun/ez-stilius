@@ -83,7 +83,7 @@ function MobileFooter({ locale }: { locale: Locale }) {
 }
 
 function CartButton({ onClick, label }: { onClick: () => void; label: string }) {
-  const { cartCount } = useCart();
+  const { itemCount } = useCart();
 
   return (
     <button
@@ -92,9 +92,9 @@ function CartButton({ onClick, label }: { onClick: () => void; label: string }) 
       aria-label={label}
     >
       <ShoppingBag className="h-5 w-5" />
-      {cartCount > 0 && (
+      {itemCount > 0 && (
         <span className="absolute -top-1 -right-1 bg-olive text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
-          {cartCount}
+          {itemCount}
         </span>
       )}
     </button>
@@ -142,7 +142,7 @@ function AccordionRow({
 export default function MobileMenu({ categories }: MobileMenuProps) {
   const t = useTranslations('header');
   const locale = useLocale() as Locale;
-  const { openCart } = useCart();
+  const { openDrawer } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -165,7 +165,7 @@ export default function MobileMenu({ categories }: MobileMenuProps) {
 
   function handleCartClick() {
     close();
-    setTimeout(() => openCart(), 350);
+    setTimeout(() => openDrawer(), 350);
   }
 
   useEffect(() => {
@@ -362,7 +362,7 @@ export default function MobileMenu({ categories }: MobileMenuProps) {
         >
           <Search className="h-5 w-5" />
         </button>
-        <CartButton onClick={openCart} label={t('cart')} />
+        <CartButton onClick={openDrawer} label={t('cart')} />
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? t('closeMenu') : t('openMenu')}
