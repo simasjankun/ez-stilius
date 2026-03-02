@@ -42,7 +42,15 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   itemCount: number;
+  /** Grand total (cart.total) — used by CartDrawer */
   subtotal: number;
+  /** Items-only subtotal before shipping (cart.item_subtotal) */
+  itemsSubtotal: number;
+  /** Shipping cost (cart.shipping_total) */
+  shippingTotal: number;
+  /** True after the initial cart fetch from cookie has settled */
+  isInitialized: boolean;
+  cartId: string | null;
   isLoading: boolean;
   isDrawerOpen: boolean;
   openDrawer: () => void;
@@ -50,6 +58,7 @@ interface CartContextType {
   addItem: (variantId: string, quantity?: number) => Promise<void>;
   updateItemQuantity: (lineItemId: string, quantity: number) => Promise<void>;
   removeItem: (lineItemId: string) => Promise<void>;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -65,6 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [regionId, setRegionId] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Fetch region ID once on mount
   useEffect(() => {
@@ -77,14 +87,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Load existing cart on mount
   useEffect(() => {
     const cartId = getCartId();
-    if (!cartId) return;
+    if (!cartId) {
+      setIsInitialized(true);
+      return;
+    }
     fetch(`${MEDUSA_URL}/store/carts/${cartId}`, { headers: HEADERS })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.cart) setCart(data.cart);
         else clearCartId();
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setIsInitialized(true));
   }, []);
 
   async function ensureCart(): Promise<string> {
@@ -176,6 +190,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const clearCart = useCallback(() => {
+    setCart(null);
+    clearCartId();
+  }, []);
+
   const items: CartItem[] = (cart?.items ?? []).map((item: any) => ({
     id: item.id,
     title: item.product_title || item.title || '',
@@ -188,6 +207,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = Number(cart?.total ?? cart?.subtotal ?? 0);
+  const itemsSubtotal = Number(cart?.item_subtotal ?? cart?.subtotal ?? 0);
+  const shippingTotal = Number(cart?.shipping_total ?? 0);
 
   return (
     <CartContext.Provider
@@ -195,6 +216,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         items,
         itemCount,
         subtotal,
+        itemsSubtotal,
+        shippingTotal,
+        isInitialized,
+        cartId: cart?.id ?? null,
         isLoading,
         isDrawerOpen,
         openDrawer: () => setIsDrawerOpen(true),
@@ -202,6 +227,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addItem,
         updateItemQuantity,
         removeItem,
+        clearCart,
       }}
     >
       {children}

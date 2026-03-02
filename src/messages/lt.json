@@ -353,5 +353,45 @@
   },
   "placeholder": {
     "content": "Puslapio turinys netrukus"
+  },
+  "checkout": {
+    "title": "Apmokėjimas",
+    "contact": "KONTAKTINĖ INFORMACIJA",
+    "email": "El. paštas",
+    "shippingAddress": "PRISTATYMO ADRESAS",
+    "firstName": "Vardas",
+    "lastName": "Pavardė",
+    "address": "Adresas",
+    "city": "Miestas",
+    "postalCode": "Pašto kodas",
+    "phone": "Telefonas",
+    "country": "Šalis",
+    "lithuania": "Lietuva",
+    "shippingMethod": "PRISTATYMO BŪDAS",
+    "paymentMethod": "APMOKĖJIMO BŪDAS",
+    "paymentBank": "Mokėjimas banku / kortele",
+    "orderSummary": "JŪSŲ UŽSAKYMAS",
+    "subtotal": "Tarpinė suma",
+    "shipping": "Pristatymas",
+    "total": "Viso",
+    "placeOrder": "PATVIRTINTI UŽSAKYMĄ",
+    "processing": "APDOROJAMA...",
+    "quantity": "Kiekis",
+    "required": "Privalomas laukas",
+    "invalidEmail": "Neteisingas el. pašto formatas",
+    "errorGeneric": "Įvyko klaida. Bandykite dar kartą.",
+    "errorStock": "Kai kurių prekių nebėra sandėlyje.",
+    "errorConnection": "Nepavyko prisijungti. Bandykite dar kartą.",
+    "freeShipping": "Nemokamas",
+    "showOrder": "Rodyti užsakymą",
+    "hideOrder": "Slėpti užsakymą",
+    "items": "prekės",
+    "fillAddressFirst": "Užpildykite pristatymo adresą"
+  },
+  "orderConfirmation": {
+    "title": "Ačiū už jūsų užsakymą!",
+    "orderNumber": "Užsakymo numeris",
+    "emailSent": "Patvirtinimas išsiųstas el. paštu",
+    "backToShop": "GRĮŽTI Į PARDUOTUVĘ"
   }
 }

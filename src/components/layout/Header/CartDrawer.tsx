@@ -166,13 +166,13 @@ export default function CartDrawer() {
                 <span className="text-charcoal font-medium">{t('total')}:</span>
                 <span className="text-charcoal font-serif text-xl">€{subtotal.toFixed(2)}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => alert(t('checkoutSoon'))}
-                className="cursor-pointer w-full bg-olive text-cream py-3.5 rounded-sm text-sm tracking-widest uppercase font-medium hover:bg-olive-dark transition-colors duration-300"
+              <Link
+                href="/checkout"
+                onClick={closeDrawer}
+                className="block text-center cursor-pointer w-full bg-olive text-cream py-3.5 rounded-sm text-sm tracking-widest uppercase font-medium hover:bg-olive-dark transition-colors duration-300"
               >
                 {t('checkout')}
-              </button>
+              </Link>
               <button
                 type="button"
                 onClick={closeDrawer}

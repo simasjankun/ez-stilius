@@ -353,5 +353,45 @@
   },
   "placeholder": {
     "content": "Page content coming soon"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "contact": "CONTACT INFORMATION",
+    "email": "Email",
+    "shippingAddress": "SHIPPING ADDRESS",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal code",
+    "phone": "Phone",
+    "country": "Country",
+    "lithuania": "Lithuania",
+    "shippingMethod": "SHIPPING METHOD",
+    "paymentMethod": "PAYMENT METHOD",
+    "paymentBank": "Bank / card payment",
+    "orderSummary": "YOUR ORDER",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "placeOrder": "PLACE ORDER",
+    "processing": "PROCESSING...",
+    "quantity": "Quantity",
+    "required": "Required field",
+    "invalidEmail": "Invalid email format",
+    "errorGeneric": "An error occurred. Please try again.",
+    "errorStock": "Some items are no longer in stock.",
+    "errorConnection": "Connection failed. Please try again.",
+    "freeShipping": "Free",
+    "showOrder": "Show order",
+    "hideOrder": "Hide order",
+    "items": "items",
+    "fillAddressFirst": "Fill in the delivery address"
+  },
+  "orderConfirmation": {
+    "title": "Thank you for your order!",
+    "orderNumber": "Order number",
+    "emailSent": "Confirmation sent to",
+    "backToShop": "BACK TO SHOP"
   }
 }
