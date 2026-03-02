@@ -338,7 +338,6 @@ export default function CheckoutForm({ locale }: { locale: string }) {
       });
       if (!updateRes.ok) throw new Error('connection');
       const updatedCartData = await updateRes.json();
-      console.log('[checkout] cart updated:', updatedCartData?.cart?.id, 'payment_collection:', updatedCartData?.cart?.payment_collection?.id);
 
       // 2. Initialize payment session (Medusa v2)
       // Cart may already have a payment_collection; if not, create one.
@@ -352,7 +351,6 @@ export default function CheckoutForm({ locale }: { locale: string }) {
           body: JSON.stringify({ cart_id: cartId }),
         });
         const collectionData = await collectionRes.json();
-        console.log('[checkout] payment collection create:', collectionRes.status, collectionData);
         paymentCollectionId = collectionData?.payment_collection?.id ?? null;
       }
 
@@ -365,8 +363,7 @@ export default function CheckoutForm({ locale }: { locale: string }) {
             body: JSON.stringify({ provider_id: 'pp_system_default' }),
           },
         );
-        const sessionData = await sessionRes.json();
-        console.log('[checkout] payment session:', sessionRes.status, sessionData);
+        await sessionRes.json();
       }
 
       // 3. Complete cart
@@ -375,7 +372,6 @@ export default function CheckoutForm({ locale }: { locale: string }) {
         headers: HEADERS,
       });
       const completeData = await completeRes.json();
-      console.log('[checkout] complete:', completeRes.status, completeData?.type, completeData?.message);
 
       if (!completeRes.ok) throw new Error('generic');
 
