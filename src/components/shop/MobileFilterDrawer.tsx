@@ -2,9 +2,10 @@
 
 import { useEffect } from 'react';
 import { X, Check } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import type { FilterOption } from '@/lib/products';
 import { getSwatchColor } from '@/constants/colorMap';
+import { translateOptionTitle, translateOptionValue } from '@/constants/optionTranslations';
 
 interface MobileFilterDrawerProps {
   open: boolean;
@@ -46,6 +47,7 @@ export default function MobileFilterDrawer({
   showCategoryFilter = true,
 }: MobileFilterDrawerProps) {
   const t = useTranslations('shop.filters');
+  const locale = useLocale();
 
   useEffect(() => {
     if (open) {
@@ -124,7 +126,7 @@ export default function MobileFilterDrawer({
             return (
               <div key={opt.title}>
                 <p className="text-xs uppercase tracking-widest font-semibold text-warm-gray mb-2 mt-6">
-                  {opt.title}
+                  {translateOptionTitle(opt.title, locale)}
                 </p>
                 {opt.values.map((value) => {
                   const checked = selected.includes(value);
@@ -159,7 +161,7 @@ export default function MobileFilterDrawer({
                         )
                       )}
                       <span className={checked ? 'text-olive font-medium' : ''}>
-                        {value}
+                        {translateOptionValue(value, locale)}
                       </span>
                     </button>
                   );

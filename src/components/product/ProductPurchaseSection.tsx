@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { ShoppingBag } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useCart } from '@/context/CartContext';
+import { translateOptionTitle, translateOptionValue } from '@/constants/optionTranslations';
 import ProductDescription from './ProductDescription';
 
 interface ProductPurchaseSectionProps {
@@ -12,6 +13,7 @@ interface ProductPurchaseSectionProps {
 
 export default function ProductPurchaseSection({ product }: ProductPurchaseSectionProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const { addItem, isLoading } = useCart();
 
   // Initialize selected options from first variant
@@ -108,10 +110,10 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
               return (
                 <div key={option.id}>
                   <span className="text-sm font-medium text-charcoal">
-                    {option.title}:{' '}
+                    {translateOptionTitle(option.title, locale)}:{' '}
                   </span>
                   <span className="text-sm text-warm-gray">
-                    {values[0]?.value ?? '—'}
+                    {values[0]?.value ? translateOptionValue(values[0].value, locale) : '—'}
                   </span>
                 </div>
               );
@@ -120,8 +122,8 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
             return (
               <div key={option.id}>
                 <p className="text-sm font-medium text-charcoal mb-2">
-                  {option.title}
-                  {selectedValue ? `: ${selectedValue}` : ''}
+                  {translateOptionTitle(option.title, locale)}
+                  {selectedValue ? `: ${translateOptionValue(selectedValue, locale)}` : ''}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {values.map((v: any) => {
@@ -137,7 +139,7 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
                             : 'border border-sand text-charcoal bg-white hover:border-olive/50'
                         }`}
                       >
-                        {v.value}
+                        {translateOptionValue(v.value, locale)}
                       </button>
                     );
                   })}

@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { SlidersHorizontal, X } from 'lucide-react';
 import MultiSelectDropdown from '@/components/ui/MultiSelectDropdown';
 import CustomDropdown from '@/components/ui/CustomDropdown';
 import MobileFilterDrawer from '@/components/shop/MobileFilterDrawer';
 import type { FilterOption } from '@/lib/products';
 import { getSwatchColor } from '@/constants/colorMap';
+import { translateOptionTitle, translateOptionValue } from '@/constants/optionTranslations';
 
 interface FilterBarProps {
   categories?: string[];
@@ -40,6 +41,7 @@ export default function FilterBar({
   categoryOptions = [],
 }: FilterBarProps) {
   const t = useTranslations('shop.filters');
+  const locale = useLocale();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const sortOptions = [
@@ -84,16 +86,21 @@ export default function FilterBar({
               )}
               {productOptions.map((opt) => {
                 const selected = selectedOptions[opt.title] ?? [];
+                const translatedTitle = translateOptionTitle(opt.title, locale);
                 const btnLabel =
                   selected.length === 0
-                    ? opt.title
+                    ? translatedTitle
                     : selected.length === 1
-                    ? selected[0]
-                    : `${opt.title} (${selected.length})`;
+                    ? translateOptionValue(selected[0], locale)
+                    : `${translatedTitle} (${selected.length})`;
                 return (
                   <MultiSelectDropdown
                     key={opt.title}
-                    options={opt.values.map((v) => ({ value: v, label: v, color: getSwatchColor(v) ?? undefined }))}
+                    options={opt.values.map((v) => ({
+                      value: v,
+                      label: translateOptionValue(v, locale),
+                      color: getSwatchColor(v) ?? undefined,
+                    }))}
                     values={selected}
                     onChange={(values) => onOptionsChange(opt.title, values)}
                     buttonLabel={btnLabel}
