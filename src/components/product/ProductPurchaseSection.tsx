@@ -36,17 +36,32 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
       ),
     ) ?? firstVariant ?? null;
 
-  // Inventory logic
-  // manage_inventory must be *explicitly* true — undefined (field not returned) = no limit
-  // inventory_quantity: Medusa v2 returns 0 by default even when stock exists (inventory tracked
-  // via location levels, not directly on variant), so we only trust it when > 0
-  const hasInventoryLimit = selectedVariant?.manage_inventory === true;
-  const rawQty: number | null | undefined = selectedVariant?.inventory_quantity;
-  const maxQuantity: number = (typeof rawQty === 'number' && rawQty > 0) ? rawQty : 99;
-  const effectiveMax = hasInventoryLimit ? Math.min(maxQuantity, 99) : 99;
-  // Never show sold-out based on inventory_quantity alone — unreliable in Medusa v2
-  // API will reject add-to-cart if genuinely out of stock
-  const isSoldOut = false;
+  // Canonical Medusa v2 inventory logic (per docs):
+  // manage_inventory defaults to true — treat anything !== false as "managed"
+  // allow_backorder: if true → always purchasable regardless of qty
+  // inventory_quantity: null = not linked to sales channel (unknown); 0 = genuinely sold out; N = stock
+  const manageInventory = selectedVariant?.manage_inventory;
+  const allowBackorder = selectedVariant?.allow_backorder;
+  const inventoryQty = selectedVariant?.inventory_quantity as number | null | undefined;
+
+  // Debug: log actual values from Medusa (remove once confirmed working)
+  if (process.env.NODE_ENV !== 'production' && selectedVariant) {
+    console.log('[EŽ inventory]', {
+      variantId: selectedVariant.id,
+      manage_inventory: manageInventory,
+      allow_backorder: allowBackorder,
+      inventory_quantity: inventoryQty,
+    });
+  }
+
+  const isUnlimited = manageInventory === false || allowBackorder === true;
+  // null === 0 is false in JS, so null inventory_quantity never triggers sold-out
+  const isSoldOut = !isUnlimited && inventoryQty === 0;
+  const effectiveMax = isUnlimited
+    ? 99
+    : typeof inventoryQty === 'number' && inventoryQty > 0
+      ? inventoryQty
+      : 99; // null/undefined = not linked to sales channel, let cart API handle overage
 
   // Reset quantity to 1 when selected variant changes
   useEffect(() => {

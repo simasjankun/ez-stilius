@@ -42,12 +42,10 @@ export default async function RelatedProductsSection({
               new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
             const isSoldOut =
               (product.variants?.length ?? 0) > 0 &&
-              product.variants.every(
-                (v: any) =>
-                  v.manage_inventory === true &&
-                  typeof v.inventory_quantity === 'number' &&
-                  v.inventory_quantity === 0,
-              );
+              product.variants.every((v: any) => {
+                const unlimited = v.manage_inventory === false || v.allow_backorder === true;
+                return !unlimited && v.inventory_quantity === 0;
+              });
             return (
               <ProductCard
                 key={product.id}

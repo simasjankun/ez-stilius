@@ -53,7 +53,7 @@ export async function fetchProducts(options: {
 
   // +options.values → available option values per product (e.g. Color: Yellow)
   // +variants.options → which option value each variant has selected
-  let url = `${MEDUSA_URL}/store/products?limit=${limit}&offset=${offset}&locale=${medusaLocale}&fields=%2Boptions.values%2C%2Bvariants.options`;
+  let url = `${MEDUSA_URL}/store/products?limit=${limit}&offset=${offset}&locale=${medusaLocale}&fields=%2Boptions.values%2C%2Bvariants.options%2C%2Bvariants.inventory_quantity%2C%2Bvariants.manage_inventory%2C%2Bvariants.allow_backorder`;
   if (regionId) url += `&region_id=${regionId}`;
   if (order) url += `&order=${encodeURIComponent(order)}`;
   if (categoryIds?.length) {
@@ -190,7 +190,7 @@ export async function fetchProductByHandle(
 ): Promise<any | null> {
   const medusaLocale = getMedusaLocale(locale);
   // +images,+categories.id,+categories.name,+categories.handle,+options.values,+variants.options
-  let url = `${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}&locale=${medusaLocale}&fields=%2Bimages%2C%2Bcategories.id%2C%2Bcategories.name%2C%2Bcategories.handle%2C%2Boptions.values%2C%2Bvariants.options%2C%2Bvariants.inventory_quantity%2C%2Bvariants.manage_inventory`;
+  let url = `${MEDUSA_URL}/store/products?handle=${encodeURIComponent(handle)}&locale=${medusaLocale}&fields=%2Bimages%2C%2Bcategories.id%2C%2Bcategories.name%2C%2Bcategories.handle%2C%2Boptions.values%2C%2Bvariants.options%2C%2Bvariants.inventory_quantity%2C%2Bvariants.manage_inventory%2C%2Bvariants.allow_backorder`;
   if (regionId) url += `&region_id=${regionId}`;
 
   try {
