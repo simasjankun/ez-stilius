@@ -13,14 +13,15 @@ interface ProductCardProps {
   isNew?: boolean;
   isRange?: boolean;
   image?: string;
+  isSoldOut?: boolean;
 }
 
-export default function ProductCard({ slug, nameKey, name, price, originalPrice, isNew, isRange, image }: ProductCardProps) {
+export default function ProductCard({ slug, nameKey, name, price, originalPrice, isNew, isRange, image, isSoldOut }: ProductCardProps) {
   const t = useTranslations();
 
   const displayName = name ?? (nameKey ? t(nameKey) : '');
-  const showSaleBadge = !!originalPrice;
-  const showNewBadge = isNew && !originalPrice;
+  const showSaleBadge = !isSoldOut && !!originalPrice;
+  const showNewBadge = !isSoldOut && isNew && !originalPrice;
 
   return (
     <Link href={`/shop/product/${slug}`} className="group block">
@@ -37,9 +38,19 @@ export default function ProductCard({ slug, nameKey, name, price, originalPrice,
           </div>
         )}
 
-        {(showSaleBadge || showNewBadge) && (
+        {/* Sold-out overlay */}
+        {isSoldOut && (
+          <div className="absolute inset-0 bg-cream/50 z-[1]" />
+        )}
+
+        {/* Badges */}
+        {(isSoldOut || showSaleBadge || showNewBadge) && (
           <div className="absolute top-2 left-2 z-10">
-            {showSaleBadge ? (
+            {isSoldOut ? (
+              <span className="bg-warm-gray text-cream text-xs px-2 py-1 rounded-sm uppercase tracking-wide">
+                {t('product.soldOut')}
+              </span>
+            ) : showSaleBadge ? (
               <span className="bg-olive text-cream text-xs px-2 py-1 rounded-sm uppercase tracking-wide">
                 {t('shop.badges.sale')}
               </span>
@@ -52,19 +63,19 @@ export default function ProductCard({ slug, nameKey, name, price, originalPrice,
         )}
       </div>
 
-      <h3 className="mt-3 font-serif text-base text-charcoal truncate">
+      <h3 className={`mt-3 font-serif text-base truncate ${isSoldOut ? 'text-warm-gray' : 'text-charcoal'}`}>
         {displayName}
       </h3>
 
       {originalPrice ? (
         <p className="mt-1 text-sm">
           <span className="line-through text-warm-gray mr-2">€{originalPrice.toFixed(2)}</span>
-          <span className="font-medium text-olive">
+          <span className={`font-medium ${isSoldOut ? 'text-warm-gray' : 'text-olive'}`}>
             {isRange ? `${t('shop.from')} ` : ''}€{price.toFixed(2)}
           </span>
         </p>
       ) : (
-        <p className="mt-1 text-sm font-medium text-olive">
+        <p className={`mt-1 text-sm font-medium ${isSoldOut ? 'text-warm-gray' : 'text-olive'}`}>
           {isRange ? `${t('shop.from')} ` : ''}€{price.toFixed(2)}
         </p>
       )}

@@ -298,6 +298,14 @@ export default function ProductGrid({
                 const isNew =
                   new Date(product.created_at) >
                   new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+                const isSoldOut =
+                  (product.variants?.length ?? 0) > 0 &&
+                  product.variants.every(
+                    (v: any) =>
+                      v.manage_inventory === true &&
+                      typeof v.inventory_quantity === 'number' &&
+                      v.inventory_quantity === 0,
+                  );
                 return (
                   <ProductCard
                     key={product.id}
@@ -308,6 +316,7 @@ export default function ProductGrid({
                     isNew={isNew}
                     isRange={isRange}
                     image={image ?? undefined}
+                    isSoldOut={isSoldOut}
                   />
                 );
               })}
