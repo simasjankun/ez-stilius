@@ -37,10 +37,16 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
     ) ?? firstVariant ?? null;
 
   // Inventory logic
-  const hasInventoryLimit = selectedVariant?.manage_inventory !== false;
-  const maxQuantity: number = selectedVariant?.inventory_quantity ?? 10;
+  // manage_inventory must be *explicitly* true — undefined (field not returned) = no limit
+  // inventory_quantity: Medusa v2 returns 0 by default even when stock exists (inventory tracked
+  // via location levels, not directly on variant), so we only trust it when > 0
+  const hasInventoryLimit = selectedVariant?.manage_inventory === true;
+  const rawQty: number | null | undefined = selectedVariant?.inventory_quantity;
+  const maxQuantity: number = (typeof rawQty === 'number' && rawQty > 0) ? rawQty : 99;
   const effectiveMax = hasInventoryLimit ? Math.min(maxQuantity, 99) : 99;
-  const isSoldOut = hasInventoryLimit && maxQuantity === 0;
+  // Never show sold-out based on inventory_quantity alone — unreliable in Medusa v2
+  // API will reject add-to-cart if genuinely out of stock
+  const isSoldOut = false;
 
   // Reset quantity to 1 when selected variant changes
   useEffect(() => {
@@ -195,9 +201,9 @@ export default function ProductPurchaseSection({ product }: ProductPurchaseSecti
               +
             </button>
           </div>
-          {hasInventoryLimit && maxQuantity <= 5 && maxQuantity > 0 && (
+          {hasInventoryLimit && typeof rawQty === 'number' && rawQty > 0 && rawQty <= 5 && (
             <p className="text-xs text-warm-gray mt-1.5">
-              {t('product.stockLeft', { count: maxQuantity })}
+              {t('product.stockLeft', { count: rawQty })}
             </p>
           )}
         </div>
